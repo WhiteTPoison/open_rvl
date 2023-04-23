@@ -31,6 +31,8 @@ typedef struct MEMiHeapHead {
     }; // at 0x38
 } MEMiHeapHead;
 
+typedef MEMiHeapHead* MEMHeapHandle;
+
 void MEMiInitHeapHead(MEMiHeapHead* heap, u32 magic, void* start, void* end,
                       u16 opt);
 void MEMiFinalizeHeap(MEMiHeapHead* heap);
