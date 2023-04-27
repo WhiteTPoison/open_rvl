@@ -1,53 +1,52 @@
 #pragma once
-#include <types.h>
 
-enum PADButtonBits {
-    Start = 0x1000,
-    Y = 0x800,
-    X = 0x400,
-    B = 0x200,
-    A = 0x100,
-    L = 0x40,
-    R = 0x20,
-    Z = 0x10,
-    UpDPad = 0x8,
-    DownDPad = 0x4,
-    RightDPad = 0x2,
-    LeftDPad = 0x1
-};
+namespace PADButtonBits {
+    const unsigned short Start = 0x1000;
+    const unsigned short Y = 0x800;
+    const unsigned short X = 0x400;
+    const unsigned short B = 0x200;
+    const unsigned short A = 0x100;
+    const unsigned short L = 0x40;
+    const unsigned short R = 0x20;
+    const unsigned short Z = 0x10;
+    const unsigned short UpDPad = 0x8;
+    const unsigned short DownDPad = 0x4;
+    const unsigned short RightDPad = 0x2;
+    const unsigned short LeftDPad = 0x1;
+}
 
 //This is the representation of the physical buttons pressed on a GC controller
 union PADButtons {
-    u32 bits;
+    unsigned int bits;
     struct {
-        unsigned _none: 3;
-        unsigned Start: 1;
-        unsigned Y: 1;
-        unsigned X: 1;
-        unsigned B: 1;
-        unsigned A: 1;
-        unsigned _none2: 1;
-        unsigned L: 1;
-        unsigned R: 1;
-        unsigned Z: 1;
-        unsigned UpDPad: 1;
-        unsigned DownDPad: 1;
-        unsigned RightDPad: 1;
-        unsigned LeftDPad: 1;
+        unsigned int _none: 3;
+        unsigned int Start: 1;
+        unsigned int Y: 1;
+        unsigned int X: 1;
+        unsigned int B: 1;
+        unsigned int A: 1;
+        unsigned int _none2: 1;
+        unsigned int L: 1;
+        unsigned int R: 1;
+        unsigned int Z: 1;
+        unsigned int UpDPad: 1;
+        unsigned int DownDPad: 1;
+        unsigned int RightDPad: 1;
+        unsigned int LeftDPad: 1;
     }__attribute__((packed, aligned(2)));
 }__attribute__((packed, aligned(2)));
 
 struct PADStatus {
-    PADButtons button;
-    s8  stickX;
-    s8  stickY;
-    s8  substickX;
-    s8  substickY;
-    u8  triggerLeft;
-    u8  triggerRight;
-    u8  analogA;
-    u8  analogB;
-    s8  err;
+    unsigned int button;
+    signed char stickX;
+    unsigned char stickY;
+    signed char substickX;
+    signed char substickY;
+    unsigned char triggerLeft;
+    unsigned char triggerRight;
+    unsigned char analogA;
+    unsigned char analogB;
+    signed char  err;
 }__attribute__((packed, aligned(2)));
 
 
