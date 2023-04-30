@@ -19,20 +19,20 @@ namespace PADButtonBits {
 union PADButtons {
     unsigned int bits;
     struct {
-        unsigned int _none: 3;
-        unsigned int Start: 1;
-        unsigned int Y: 1;
-        unsigned int X: 1;
-        unsigned int B: 1;
-        unsigned int A: 1;
-        unsigned int _none2: 1;
-        unsigned int L: 1;
-        unsigned int R: 1;
-        unsigned int Z: 1;
-        unsigned int UpDPad: 1;
-        unsigned int DownDPad: 1;
-        unsigned int RightDPad: 1;
-        unsigned int LeftDPad: 1;
+        unsigned _none: 3;
+        unsigned Start: 1;
+        unsigned Y: 1;
+        unsigned X: 1;
+        unsigned B: 1;
+        unsigned A: 1;
+        unsigned _none2: 1;
+        unsigned L: 1;
+        unsigned R: 1;
+        unsigned Z: 1;
+        unsigned UpDPad: 1;
+        unsigned DownDPad: 1;
+        unsigned RightDPad: 1;
+        unsigned LeftDPad: 1;
     }__attribute__((packed, aligned(2)));
 }__attribute__((packed, aligned(2)));
 
