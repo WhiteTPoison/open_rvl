@@ -1,9 +1,9 @@
 #ifndef MSL_MATH_DOUBLE_H
 #define MSL_MATH_DOUBLE_H
-#include "s_cos.h"
-#include "s_sin.h"
-#include "s_tan.h"
-#include "w_sqrt.h"
+#include "internal/s_cos.h"
+#include "internal/s_sin.h"
+#include "internal/s_tan.h"
+#include "internal/w_sqrt.h"
 #include <types.h>
 #ifdef __cplusplus
 extern "C" {
