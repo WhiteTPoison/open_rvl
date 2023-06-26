@@ -20,9 +20,15 @@ typedef unsigned char GXBool8;
  * Common structs
  */
 
-typedef struct _GXColor {
-    u8 r, g, b, a;
-} GXColor;
+union GXColor {
+    u32 value;
+    struct {
+        u8 r;
+        u8 g;
+        u8 b;
+        u8 a;
+    }__attribute__((packed, aligned(4)));
+}__attribute__((packed, aligned(4)));
 
 typedef struct _GXColorS10 {
     s16 r, g, b, a;

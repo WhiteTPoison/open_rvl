@@ -22,7 +22,7 @@ extern volatile union {
     int i;
     void* p;
     float f;
-} WGPIPE : 0xcc008000;
+} WGPIPE;
 
 #define GX_FIFO_ACCESS_BP 0x61
 #define GX_FIFO_ACCESS_CP 0x08
