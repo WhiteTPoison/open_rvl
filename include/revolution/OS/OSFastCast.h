@@ -7,23 +7,20 @@ extern "C" {
 
 static void OSInitFastCast(void) {
     // clang-format off
-    asm {
-        li r3, 4
-        oris r3, r3, 4
-        mtspr 0x392, r3
-
-        li r3, 5
-        oris r3, r3, 5
-        mtspr 0x393, r3
-        
-        li r3, 6
-        oris r3, r3, 6
-        mtspr 0x394, r3
-        
-        li r3, 7
-        oris r3, r3, 7
-        mtspr 0x395, r3
-    }
+    asm(
+        "li r3, 4\n\t"
+        "oris r3, r3, 4\n\t"
+        "mtspr 0x392, r3\n\t"
+        "li r3, 5\n\t"
+        "oris r3, r3, 5\n\t"
+        "mtspr 0x393, r3\n\t"
+        "li r3, 6\n\t"
+        "oris r3, r3, 6\n\t"
+        "mtspr 0x394, r3\n\t"
+        "li r3, 7\n\t"
+        "oris r3, r3, 7\n\t"
+        "mtspr 0x395, r3\n\t"
+    );
     // clang-format on
 }
 
@@ -31,9 +28,9 @@ static f32 __OSu16tof32(register const u16* arg) {
     register f32 ret;
 
     // clang-format off
-    asm {
-        psq_l ret, 0(arg), 1, 3
-    }
+    asm(
+        "psq_l ret, 0(arg), 1, 3\n\t"
+    );
     // clang-format on
 
     return ret;
@@ -47,9 +44,9 @@ static u16 __OSf32tou16(register f32 arg) {
     u16 r;
 
     // clang-format off
-    asm {
-        psq_st arg, 0(ptr), 1, 3
-    }
+    asm(
+        "psq_st arg, 0(ptr), 1, 3\n\t"
+    );
     // clang-format on
 
     r = *(u16*)ptr;
@@ -62,9 +59,9 @@ static f32 __OSs16tof32(register const s16* arg) {
     register f32 ret;
 
     // clang-format off
-    asm {
-        psq_l ret, 0(arg), 1, 5
-    }
+    asm(
+        "psq_l ret, 0(arg), 1, 5\n\t"
+    );
     // clang-format on
 
     return ret;
@@ -78,9 +75,9 @@ static s16 __OSf32tos16(register f32 arg) {
     s16 r;
 
     // clang-format off
-    asm {
-        psq_st arg, 0(ptr), 1, 5
-    }
+    asm (
+        "psq_st arg, 0(ptr), 1, 5\n\t"
+    );
     // clang-format on
 
     r = *(s16*)ptr;

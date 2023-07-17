@@ -88,7 +88,7 @@ typedef struct OSBI2 {
  * 0x80000000 - 0x80000100
  */
 // clang-format off
-OS_DEF_GLOBAL_VAR(OSBootInfo, BOOT_INFO,                   0x80000000);
+/* OS_DEF_GLOBAL_VAR(OSBootInfo, BOOT_INFO,                   0x80000000);
 OS_DEF_GLOBAL_VAR(OSDebugInterface, DEBUG_INTERFACE,       0x80000040);
 OS_DEF_GLOBAL_ARR(u8, DB_INTEGRATOR_HOOK, [0x24],          0x80000060);
 OS_DEF_GLOBAL_VAR(struct OSContext*, CURRENT_CONTEXT_PHYS, 0x800000C0);
@@ -105,14 +105,14 @@ OS_DEF_GLOBAL_VAR(void*, DEBUG_MONITOR,                    0x800000EC);
 OS_DEF_GLOBAL_VAR(u32, SIMULATED_MEM_SIZE,                 0x800000F0);
 OS_DEF_GLOBAL_VAR(OSBI2*, DVD_BI2,                         0x800000F4);
 OS_DEF_GLOBAL_VAR(u32, BUS_CLOCK_SPEED,                    0x800000F8);
-OS_DEF_GLOBAL_VAR(u32, CPU_CLOCK_SPEED,                    0x800000FC);
+OS_DEF_GLOBAL_VAR(u32, CPU_CLOCK_SPEED,                    0x800000FC); */
 // clang-format on
 
 /**
  * 0x80003000 - 0x80003F00
  */
 // clang-format off
-OS_DEF_GLOBAL_ARR(void*, EXCEPTION_TABLE, [15],          0x80003000);
+/* OS_DEF_GLOBAL_ARR(void*, EXCEPTION_TABLE, [15],          0x80003000);
 OS_DEF_GLOBAL_VAR(void*, INTR_HANDLER_TABLE,             0x80003040);
 OS_DEF_GLOBAL_ARR(volatile s32, EXI_800030C0, [],        0x800030C0);
 OS_DEF_GLOBAL_VAR(void*, FIRST_REL,                      0x800030C8);
@@ -150,13 +150,13 @@ OS_DEF_GLOBAL_VAR(u8, CURRENT_APP_TYPE,                  0x80003184);
 OS_DEF_GLOBAL_VAR(u32, MINIMUM_IOS_VERSION,              0x80003188);
 OS_DEF_GLOBAL_VAR(u32, NAND_TITLE_LAUNCH_CODE,           0x8000318C);
 OS_DEF_GLOBAL_VAR(u32, NAND_TITLE_RETURN_CODE,           0x80003190);
-OS_DEF_GLOBAL_ARR(u8, SC_PRDINFO, [0x100],               0x80003800);
+OS_DEF_GLOBAL_ARR(u8, SC_PRDINFO, [0x100],               0x80003800); */
 // clang-format on
 
 /**
  * PI hardware globals
  */
-volatile u32 PI_HW_REGS[] : 0xCC003000;
+//volatile u32 PI_HW_REGS[] : 0xCC003000;
 typedef enum {
     PI_INTSR,    //!< 0xCC003000
     PI_INTMR,    //!< 0xCC003004
@@ -210,7 +210,7 @@ typedef enum {
  * MI Hardware Registers
  * https://www.gc-forever.com/yagcd/chap5.html#sec5.5
  */
-volatile u16 MI_HW_REGS[] : 0xCC004000;
+//volatile u16 MI_HW_REGS[] : 0xCC004000;
 typedef enum {
     MI_PAGE_MEM0_H, //!< 0xCC004000
     MI_PAGE_MEM0_L, //!< 0xCC004002
@@ -254,18 +254,18 @@ typedef enum {
  * DI hardware globals
  */
 // clang-format off
-OS_DEF_HW_REG(volatile u32, DI_DMA_ADDR, 0xCD006014);
-OS_DEF_HW_REG(volatile u32, DI_CONFIG,   0xCD006024);
+/* OS_DEF_HW_REG(volatile u32, DI_DMA_ADDR, 0xCD006014);
+OS_DEF_HW_REG(volatile u32, DI_CONFIG,   0xCD006024); */
 // clang-format on
 
 /**
  * Misc/unknown globals
  */
 // clang-format off
-OS_DEF_HW_REG(volatile u32, UNK_CD000034, 0xCD000034);
+/* OS_DEF_HW_REG(volatile u32, UNK_CD000034, 0xCD000034);
 OS_DEF_HW_REG(volatile u32, UNK_CD800180, 0xCD800180);
 OS_DEF_HW_REG(volatile u32, UNK_CD8001CC, 0xCD8001CC);
-OS_DEF_HW_REG(volatile u32, UNK_CD8001D0, 0xCD8001D0);
+OS_DEF_HW_REG(volatile u32, UNK_CD8001D0, 0xCD8001D0); */
 // clang-format on
 
 #ifdef __cplusplus
