@@ -9,7 +9,11 @@ extern "C" {
  * VI Hardware Registers
  * https://www.gc-forever.com/yagcd/chap5.html#sec5.3
  */
-volatile u16 VI_HW_REGS[] : 0xCC002000;
+volatile u16 VI_HW_REGS[]
+#ifdef __MWERKS__
+: 0xCC002000
+#endif
+;
 
 /**
  * Hardware register indexes

@@ -42,7 +42,13 @@ extern volatile union {
     unsigned int ui;
     void* p;
     float f;
-} WGPIPE : 0xCC008000;
+} WGPIPE
+// Codewarrior allows specifying symbold addr with ':'
+// however this breaks other compilers
+#ifdef __MWERKS__
+    : 0xCC008000
+#endif
+    ;
 
 /**
  * FIFO commands
