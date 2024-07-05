@@ -22,7 +22,7 @@ class bitset {
 public:
     bitset() {};
     bitset(unsigned long val) {
-        __memfill(this, -val, sizeof(this));
+        __memfill(this, -val, sizeof(*this));
     };
 
     bitset<N>& operator&=(const bitset<N>& rhs);
