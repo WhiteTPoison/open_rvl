@@ -1,8 +1,12 @@
-#pragma once
+#ifndef RVL_SDK_SO_BASIC_H
+#define RVL_SDK_SO_BASIC_H
 
-#include "types.h"
+#include <revolution/types.h>
 
+#ifdef __cplusplus
 extern "C" {
+#endif
+
 typedef void* (*alloc_t)(int, size_t);
 typedef void (*free_t)(int, void*);
 struct SOInitInfo {
@@ -28,4 +32,8 @@ u32 SOHtoNs(u32 hostshort);
 u32 SOHtoHl(u32 netlong);
 u32 SOHtoHs(u32 netshort);
 u32 SONtoHs(short);
+
+#ifdef __cplusplus
 }
+#endif
+#endif
