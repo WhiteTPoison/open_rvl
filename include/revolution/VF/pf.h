@@ -10,6 +10,24 @@ typedef enum {
     PF_RESULT_INVALID = 10,
 } PFResult;
 
+struct PF_ENT_ITER {
+    char _0x0[0x8];
+    u32 _0x8;
+    char _0xC[0x2c];
+    void* unk;
+    char _0x3c[0x31];
+};
+
+struct PF_DIR_ENT {
+    char _0x0[0x228];
+    u32 _0x228;
+    void* cache;
+    char _0x230[4];
+    u32 _0x234;
+    int sector;
+    short offset;
+};
+
 #ifdef __cplusplus
 }
 #endif

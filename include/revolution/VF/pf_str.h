@@ -33,6 +33,9 @@ int VFiPFSTR_StrNCmp(PF_STR* str, const char* cmp, u32 target, s16 offset,
                      u16 n);
 void VFiPFSTR_ToUpperNStr(PF_STR* str, u16 n, char* out);
 
+s32 PFSTR_InitStr(PF_STR* str, const char* s, u32 mode);
+
+
 #ifdef __cplusplus
 }
 #endif
