@@ -6,6 +6,8 @@ extern "C" {
 #endif
 
 #include <revolution/DWC/dwc_init.h>
+#include <revolution/DWC/dwc_nd.h>
+#include <revolution/dwc/dwc_memfunc.h>
 
 #ifdef __cplusplus
 }
