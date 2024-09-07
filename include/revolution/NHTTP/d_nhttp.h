@@ -32,6 +32,7 @@ typedef enum {
 typedef enum {
     NHTTP_REQMETHOD_GET = 0,
     NHTTP_REQMETHOD_POST = 1,
+    NHTTP_REQMETHOD_HEAD = 2,
 } NHTTPReqMethod;
 
 typedef void* NHTTPRequestHandle;
@@ -43,7 +44,7 @@ typedef void (*NHTTPReqCallback)(NHTTPError, NHTTPResponseHandle, void*);
 
 int NHTTPStartup(NHTTPAlloc, NHTTPFree, u32);
 NHTTPRequestHandle* NHTTPCreateRequest(const char* url, NHTTPReqMethod, char* buffer, size_t bufferSize, NHTTPReqCallback, void*);
-int NHTTPSSendRequestAsync(NHTTPRequestHandle);
+int NHTTPSendRequestAsync(NHTTPRequestHandle);
 
 #ifdef __cplusplus
 }
