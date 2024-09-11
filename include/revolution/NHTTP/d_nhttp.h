@@ -45,7 +45,11 @@ typedef void (*NHTTPReqCallback)(NHTTPError, NHTTPResponseHandle, void*);
 int NHTTPStartup(NHTTPAlloc, NHTTPFree, u32);
 NHTTPRequestHandle* NHTTPCreateRequest(const char* url, NHTTPReqMethod, char* buffer, size_t bufferSize, NHTTPReqCallback, void*);
 int NHTTPSendRequestAsync(NHTTPRequestHandle);
+
 void NHTTPDestroyResponse(NHTTPResponseHandle);
+int NHTTPGetResultCode(NHTTPResponseHandle);
+int NHTTPGetBodyAll(NHTTPResponseHandle, char**);
+//int NHTTPGetHeaderField(NHTTPResponseHandle, const char*, char**);
 
 #ifdef __cplusplus
 }
