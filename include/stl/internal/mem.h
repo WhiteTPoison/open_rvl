@@ -7,6 +7,8 @@ extern "C" {
 
 void* memcpy(void*, const void*, size_t);
 void* memset(void*, int, size_t);
+void* memfill(const void*, int, size_t);
+void* __memfill(const void*, int, size_t);
 void* memmove(void*, const void*, size_t);
 void* memchr(const void*, int, size_t);
 void* __memrchr(const void*, int, size_t);
