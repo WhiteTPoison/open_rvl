@@ -12,7 +12,8 @@ extern "C" {
 volatile u32 AI_HW_REGS[]
 #ifdef __MWERKS__ 
 : 0xCD006C00
-#endif;
+#endif
+;
 
 /**
  * Hardware register indexes

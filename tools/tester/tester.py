@@ -1,6 +1,6 @@
 from sys import argv
 from os import remove, walk
-from os.path import exists, join
+from os.path import exists, isdir, join
 from json import loads, dumps
 from subprocess import run, PIPE
 from argparse import ArgumentParser
@@ -12,15 +12,15 @@ from src.fixer import Fixer
 
 # Can be overridden per unit test
 DEFAULT_CC_ARCH = "GC"
-DEFAULT_CC_VERSION = "3.0"
+DEFAULT_CC_VERSION = "3.0a5.2"
 DEFAULT_CFLAGS = "-msgstyle gcc -lang c -enum int -inline auto -ipa file -Cpp_exceptions off -RTTI off -proc gekko -fp hard -I- -Iinclude -ir include/stl -ir include/revolution -nodefaults -w unused,missingreturn,err -requireprotos"
 DEFAULT_OPT = "-O4,p"
 
-AS = "tools\\powerpc-eabi-as.exe"
+AS = join("tools", "powerpc-eabi-as.exe")
 ASFLAGS = "-mgekko -I tools/tester/include"
 
 TESTS_DIR = "tests/"
-CC_DIR = "tools\\GC_WII_COMPILERS"
+CC_DIR = join("tools", "GC_WII_COMPILERS")
 
 WIBO = ""
 
@@ -118,7 +118,7 @@ def run_test(test_file: str) -> bool:
     # Compile source file
     src_file = test_file.replace(".json", "")
     src_file = src_file.replace("tests", "src")
-    cc_path = f"{WIBO} {CC_DIR}\\{cc_arch}\\{cc_ver}\\mwcceppc.exe"
+    cc_path = f"{WIBO} {join(CC_DIR, cc_arch, cc_ver, 'mwcceppc.exe')}"
     cmd = f"{cc_path} {cflags} {opt} -c -o temp.o {src_file}"
 
     result = run(cmd, shell=True, stdout=PIPE,
@@ -182,8 +182,15 @@ def run_test(test_file: str) -> bool:
     return not any_fail
 
 
+def dir_path(path):
+    if isdir(path):
+        return path
+    else:
+        raise NotADirectoryError(path)
+
+
 def main():
-    global WIBO
+    global WIBO, CC_DIR
 
     parser = ArgumentParser()
     group = parser.add_mutually_exclusive_group(required=False)
@@ -191,11 +198,16 @@ def main():
                        help="Assembly file (*.s) to create unit test from")
     group.add_argument("--make_obj", type=str, required=False,
                        help="Object file (*.o) to create unit test from")
+    parser.add_argument("--compilers", type=dir_path, required=False,
+                        help="Path to compilers")
     parser.add_argument("--run", type=str, required=False,
                         help="Unit test to run (specify \"all\" to run everything")
     parser.add_argument("--wibo", type=str, required=False,
                         help="Whether to use WiBo to run CodeWarrior")
     args = parser.parse_args(argv[1:])
+
+    if args.compilers:
+        CC_DIR = args.compilers
 
     # Create unit test from object file
     if args.make_obj != None:
@@ -236,5 +248,5 @@ def main():
 
     exit(0)
 
-
-main()
+if __name__ == '__main__':
+    main()
