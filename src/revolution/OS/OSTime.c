@@ -36,7 +36,7 @@ asm s64 OSGetTime(void) {
     // clang-format on
 }
 
-asm s32 OSGetTick(void){
+asm u32 OSGetTick(void){
     // clang-format off
     nofralloc
 
@@ -46,15 +46,15 @@ asm s32 OSGetTick(void){
 }
 
 s64 __OSGetSystemTime(void) {
-    const BOOL enabled = OSDisableInterrupts();
-    const s64 time = OSGetTime() + OS_SYSTEM_TIME;
+    BOOL enabled = OSDisableInterrupts();
+    s64 time = OSGetTime() + OS_SYSTEM_TIME;
     OSRestoreInterrupts(enabled);
     return time;
 }
 
 s64 __OSTimeToSystemTime(s64 time) {
-    const BOOL enabled = OSDisableInterrupts();
-    const s64 sysTime = OS_SYSTEM_TIME + time;
+    BOOL enabled = OSDisableInterrupts();
+    s64 sysTime = OS_SYSTEM_TIME + time;
     OSRestoreInterrupts(enabled);
     return sysTime;
 }
@@ -74,13 +74,13 @@ static s32 GetLeapDays(s32 year) {
     return (year + 3) / 4 - (year - 1) / 100 + (year - 1) / 400;
 }
 
-static void GetDates(s32 days, OSCalendarTime* cal) DONT_INLINE {
+static void GetDates(s32 days, OSCalendarTime* cal) DECOMP_DONT_INLINE {
     s32 year;
     s32 totalDays;
     s32* p_days;
     s32 month;
 
-    cal->week_day = (days + 6) % WEEK_DAY_MAX;
+    cal->wday = (days + 6) % WEEK_DAY_MAX;
 
     // WTF??
     for (year = days / YEAR_DAY_MAX;
@@ -89,14 +89,14 @@ static void GetDates(s32 days, OSCalendarTime* cal) DONT_INLINE {
     }
     days -= totalDays;
     cal->year = year;
-    cal->year_day = days;
+    cal->yday = days;
 
     p_days = IsLeapYear(year) ? LeapYearDays : YearDays;
     for (month = MONTH_MAX; days < p_days[--month];) {
         ;
     }
     cal->month = month;
-    cal->month_day = days - p_days[month] + 1;
+    cal->mday = days - p_days[month] + 1;
 }
 
 void OSTicksToCalendarTime(s64 ticks, OSCalendarTime* cal) {
@@ -143,7 +143,7 @@ s64 OSCalendarTimeToTicks(const OSCalendarTime* cal) {
 
     // clang-format off
     seconds = (s64)SECS_IN_YEAR * year +
-              (s64)SECS_IN_DAY * (cal->month_day + GetLeapDays(year) + GetYearDays(year, month) - 1) +
+              (s64)SECS_IN_DAY * (cal->mday + GetLeapDays(year) + GetYearDays(year, month) - 1) +
               (s64)SECS_IN_HOUR * cal->hour +
               (s64)SECS_IN_MIN * cal->min +
               cal->sec -

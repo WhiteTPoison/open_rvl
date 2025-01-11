@@ -21,6 +21,7 @@ extern "C" {
 #include <revolution/VF/pf_str.h>
 #include <revolution/VF/pf_volume.h>
 #include <revolution/VF/pf_w_clib.h>
+#include <revolution/VF/d_vf.h>
 
 #ifdef __cplusplus
 }

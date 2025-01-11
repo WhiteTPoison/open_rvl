@@ -1,6 +1,6 @@
 #ifndef RVL_SDK_NDEV_EXI2_AD_EXI2_H
 #define RVL_SDK_NDEV_EXI2_AD_EXI2_H
-#include <revolution/types.h>
+#include <types.h>
 #ifdef __cplusplus
 extern "C" {
 #endif

@@ -1,12 +1,9 @@
 #ifndef RVL_SDK_DB_H
 #define RVL_SDK_DB_H
-#include <revolution/types.h>
+#include <types.h>
 #ifdef __cplusplus
 extern "C" {
 #endif
-
-// Forward declarations
-typedef struct OSDebugInterface;
 
 void DBInit(void);
 void __DBExceptionDestinationAux(void);

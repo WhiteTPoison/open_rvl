@@ -1,13 +1,20 @@
 #ifndef RVL_SDK_GX_TRANSFORM_H
 #define RVL_SDK_GX_TRANSFORM_H
+#include <types.h>
+
 #include <revolution/GX/GXTypes.h>
+
 #include <revolution/MTX.h>
-#include <revolution/types.h>
 #ifdef __cplusplus
 extern "C" {
 #endif
 
-void GXSetProjection(const Mtx44 proj, GXProjMtxType type);
+typedef enum {
+    GX_FIELD_EVEN,
+    GX_FIELD_ODD,
+} GXInterlaceField;
+
+void GXSetProjection(const Mtx44 proj, GXProjectionType type);
 void GXSetProjectionv(const f32 proj[7]);
 void GXGetProjectionv(f32 proj[7]);
 void GXLoadPosMtxImm(const Mtx mtx, u32 id);
@@ -29,6 +36,10 @@ void GXSetClipMode(GXClipMode mode);
 void __GXSetProjection(void);
 void __GXSetViewport(void);
 void __GXSetMatrixIndex(GXAttr index);
+
+static void GXSetViewportv(const f32* vp) {
+    GXSetViewport(vp[0], vp[1], vp[2], vp[3], vp[4], vp[5]);
+}
 
 #ifdef __cplusplus
 }

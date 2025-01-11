@@ -5,6 +5,7 @@
 static s32 __CNTConvertErrorCode(s32 error) {
     int i;
 
+    // TODO: Placed in the wrong ELF section
     const s32 errorMap[] = {
         0x0000,  0x0000,  -0x03E9, -0x13C7, -0x03EA, -0x13C7, -0x03EB, -0x13C7,
         -0x03EC, -0x138A, -0x03ED, -0x13C7, -0x03EE, -0x13C7, -0x03EF, -0x13C7,
@@ -34,7 +35,7 @@ static s32 __CNTConvertErrorCode(s32 error) {
         return error;
     }
 
-    for (; i < ARRAY_LENGTH(errorMap); i += 2) {
+    for (; i < LENGTHOF(errorMap); i += 2) {
         if (error == errorMap[i]) {
             return errorMap[i + 1];
         }
@@ -63,15 +64,18 @@ s32 contentConvertPathToEntrynumNAND(CNTHandle* handle, const char* path) {
     return ARCConvertPathToEntrynum(&handle->arcHandle, path);
 }
 
-u32 contentGetLengthNAND(CNTFileInfo* info) { return info->length; }
+u32 contentGetLengthNAND(const CNTFileInfo* info) {
+    return info->length;
+}
 
-s32 contentReadNAND(CNTFileInfo* info, void* dst, s32 len, s32 offset) {
+s32 contentReadNAND(CNTFileInfo* info, void* dst, u32 len, s32 offset) {
     if (info->position + offset > info->length) {
         return -0x1391;
     }
 
     if (ESP_SeekContentFile(info->handle->fd,
-                            info->offset + info->position + offset, 0) < 0) {
+                            info->offset + info->position + offset,
+                            IPC_SEEK_BEG) < 0) {
         return -0x138C;
     }
 

@@ -10,6 +10,7 @@
 #endif
 
 #include "macros.h"
+#include <decomp.h>
 
 typedef unsigned long long u64;
 typedef signed long long s64;

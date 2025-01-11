@@ -9,10 +9,10 @@ extern "C" {
 
 typedef void* (*alloc_t)(int, size_t);
 typedef void (*free_t)(int, void*);
-typedef struct SOInitInfo {
+struct SOInitInfo {
     alloc_t allocator;
     free_t dealloc;
-} SOInitInfo;
+};
 
 void SOFree(int, void*);
 void* SOAlloc(int, size_t);

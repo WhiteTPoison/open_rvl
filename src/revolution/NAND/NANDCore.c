@@ -15,13 +15,13 @@ typedef enum {
 
 static void nandShutdownCallback(s32 result, void* arg);
 static void nandGetTypeCallback(s32 result, void* arg);
-static BOOL nandOnShutdown(u32 pass, u32 event);
+static BOOL nandOnShutdown(BOOL final, u32 event);
 static s32 _ES_InitLib(s32* fd);
-static s32 _ES_GetDataDir(s32* fd, u64 tid, char* dirOut) DONT_INLINE;
+static s32 _ES_GetDataDir(s32* fd, u64 tid, char* dirOut) DECOMP_DONT_INLINE;
 static s32 _ES_GetTitleId(s32* fd, u64* tidOut);
 static s32 _ES_CloseLib(s32* fd);
 
-static const char* __NANDVersion =
+const char* __NANDVersion =
     "<< RVL_SDK - NAND \trelease build: Nov 30 2006 03:32:57 (0x4199_60831) >>";
 
 static NANDLibState s_libState = NAND_LIB_UNINITIALIZED;
@@ -123,19 +123,19 @@ void nandConvertPath(char* abs, const char* dir, const char* rel) {
     }
 }
 
-// IPA won't inline this fsr
-inline BOOL nandIsRelativePath(const char* path) {
+BOOL nandIsRelativePath(const char* path) {
     return *path == '/' ? FALSE : TRUE;
 }
 
 BOOL nandIsPrivatePath(const char* path) {
-    const size_t len = sizeof("/shared2") - 1;
+    size_t len = sizeof("/shared2") - 1;
     return strncmp(path, "/shared2", len) == 0;
 }
 
 BOOL nandIsUnderPrivatePath(const char* path) {
-    const size_t len = sizeof("/shared2/") - 1;
-    if (strncmp(path, "/shared2", len) == 0 && path[len] != '\0') {
+    size_t len = sizeof("/shared2/") - 1;
+
+    if (strncmp(path, "/shared2/", len) == 0 && path[len] != '\0') {
         return TRUE;
     }
 
@@ -151,10 +151,7 @@ void nandReportErrorCode(s32 result){
 #pragma unused(result)
 }
 
-// Padding for the string table in order to match NANDInit
-CW_FORCE_STRINGS(NANDCore_c, "ABCDEFGH");
-
-NANDResult nandConvertErrorCode(s32 result) {
+s32 nandConvertErrorCode(s32 result) {
     int i;
 
     // clang-format off
@@ -206,7 +203,7 @@ NANDResult nandConvertErrorCode(s32 result) {
         return result;
     }
 
-    for (; i < ARRAY_LENGTH(errorMap); i += 2) {
+    for (; i < LENGTHOF(errorMap); i += 2) {
         if (result == errorMap[i]) {
             nandReportErrorCode(result);
             return errorMap[i + 1];
@@ -251,7 +248,7 @@ void nandGetParentDirectory(char* dir, const char* path) {
     }
 }
 
-NANDResult NANDInit(void) {
+s32 NANDInit(void) {
     s32 result;
     u64 tid;
     s32 fd;
@@ -307,8 +304,8 @@ NANDResult NANDInit(void) {
     }
 }
 
-static BOOL nandOnShutdown(u32 pass, u32 event) {
-    if (pass == OS_SD_PASS_FIRST) {
+static BOOL nandOnShutdown(BOOL final, u32 event) {
+    if (!final) {
         if (event == OS_SD_EVENT_SHUTDOWN) {
             volatile BOOL shutdown = FALSE;
             s64 start = OSGetTime();
@@ -333,7 +330,7 @@ static void nandShutdownCallback(s32 result, void* arg) {
     *(BOOL*)arg = TRUE;
 }
 
-NANDResult NANDGetCurrentDir(char* out) {
+s32 NANDGetCurrentDir(char* out) {
     BOOL enabled;
 
     if (!nandIsInitialized()) {
@@ -346,7 +343,7 @@ NANDResult NANDGetCurrentDir(char* out) {
     return NAND_RESULT_OK;
 }
 
-NANDResult NANDGetHomeDir(char* out) {
+s32 NANDGetHomeDir(char* out) {
     if (!nandIsInitialized()) {
         return NAND_RESULT_FATAL_ERROR;
     }
@@ -381,7 +378,7 @@ static s32 nandGetType(const char* path, u8* type, NANDCommandBlock* block,
         return ISFS_ReadDirAsync(block->path, NULL, &block->dirFileCount,
                                  nandGetTypeCallback, block);
     } else {
-        CLEAR_PATH(absPath);
+        MEMCLR(&absPath);
         nandGenerateAbsPath(absPath, path);
 
         if (!priv && nandIsUnderPrivatePath(absPath)) {
@@ -402,7 +399,7 @@ static s32 nandGetType(const char* path, u8* type, NANDCommandBlock* block,
     }
 }
 
-NANDResult NANDGetType(const char* path, u8* type) {
+s32 NANDGetType(const char* path, u8* type) {
     if (!nandIsInitialized()) {
         return NAND_RESULT_FATAL_ERROR;
     }
@@ -410,9 +407,9 @@ NANDResult NANDGetType(const char* path, u8* type) {
     return nandConvertErrorCode(nandGetType(path, type, NULL, FALSE, FALSE));
 }
 
-NANDResult NANDPrivateGetTypeAsync(const char* path, u8* type,
-                                   NANDAsyncCallback callback,
-                                   NANDCommandBlock* block) {
+s32 NANDPrivateGetTypeAsync(const char* path, u8* type,
+                            NANDAsyncCallback callback,
+                            NANDCommandBlock* block) {
     if (!nandIsInitialized()) {
         return NAND_RESULT_FATAL_ERROR;
     }
@@ -435,7 +432,9 @@ static void nandGetTypeCallback(s32 result, void* arg) {
     block->callback(nandConvertErrorCode(result), block);
 }
 
-const char* nandGetHomeDir(void) { return s_homeDir; }
+const char* nandGetHomeDir(void) {
+    return s_homeDir;
+}
 
 void NANDInitBanner(NANDBanner* banner, u32 flags, const wchar_t* title,
                     const wchar_t* subtitle) {

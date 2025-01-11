@@ -1,21 +1,29 @@
 #include <revolution/OS.h>
 
-static BOOL OnShutdown(u32 pass, u32 event);
+static BOOL OnShutdown(BOOL final, u32 event);
 static OSShutdownFunctionInfo ShutdownFunctionInfo = {OnShutdown, 127, NULL,
                                                       NULL};
 
-u32 OSGetPhysicalMem1Size(void) { return OS_PHYSICAL_MEM1_SIZE; }
+u32 OSGetPhysicalMem1Size(void) {
+    return OS_PHYSICAL_MEM1_SIZE;
+}
 
-u32 OSGetPhysicalMem2Size(void) { return OS_PHYSICAL_MEM2_SIZE; }
+u32 OSGetPhysicalMem2Size(void) {
+    return OS_PHYSICAL_MEM2_SIZE;
+}
 
-u32 OSGetConsoleSimulatedMem1Size(void) { return OS_SIMULATED_MEM1_SIZE; }
+u32 OSGetConsoleSimulatedMem1Size(void) {
+    return OS_SIMULATED_MEM1_SIZE;
+}
 
-u32 OSGetConsoleSimulatedMem2Size(void) { return OS_SIMULATED_MEM2_SIZE; }
+u32 OSGetConsoleSimulatedMem2Size(void) {
+    return OS_SIMULATED_MEM2_SIZE;
+}
 
-static BOOL OnShutdown(u32 pass, u32 event) {
+static BOOL OnShutdown(BOOL final, u32 event) {
 #pragma unused(event)
 
-    if (pass != OS_SD_PASS_FIRST) {
+    if (final) {
         MI_HW_REGS[MI_PROT_MEM0] = 0xFF;
         __OSMaskInterrupts(
             OS_INTR_MASK(OS_INTR_MEM_0) | OS_INTR_MASK(OS_INTR_MEM_1) |
@@ -25,7 +33,7 @@ static BOOL OnShutdown(u32 pass, u32 event) {
     return TRUE;
 }
 
-// Typo
+// TYPO
 static void MEMIntrruptHandler(s16 intr, OSContext* ctx) {
 #pragma unused(intr)
 
@@ -493,7 +501,7 @@ static void BATConfig(void) {
 }
 
 void __OSInitMemoryProtection(void) {
-    const BOOL enabled = OSDisableInterrupts();
+    BOOL enabled = OSDisableInterrupts();
 
     MI_HW_REGS[MI_REG_0x20] = 0;
     MI_HW_REGS[MI_PROT_MEM0] = 0xFF;

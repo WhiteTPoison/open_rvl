@@ -1,6 +1,6 @@
 #ifndef RVL_SDK_SC_SCAPI_PRDINFO_H
 #define RVL_SDK_SC_SCAPI_PRDINFO_H
-#include <revolution/types.h>
+#include <types.h>
 #ifdef __cplusplus
 extern "C" {
 #endif
@@ -20,11 +20,6 @@ typedef enum {
     SC_AREA_LTN,
     SC_AREA_SAF,
 } SCProductArea;
-
-typedef struct SCRegion {
-    s8 area;      // at 0x0
-    char name[4]; // at 0x1
-} SCRegion;
 
 BOOL __SCF1(const char* type, char* buf, u32 sz);
 BOOL SCGetProductAreaString(char* buf, u32 sz);

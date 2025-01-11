@@ -1,12 +1,15 @@
 #ifndef RVL_SDK_GX_FIFO_H
 #define RVL_SDK_GX_FIFO_H
+#include <types.h>
+
 #include <revolution/GX/GXInternal.h>
-#include <revolution/types.h>
 #ifdef __cplusplus
 extern "C" {
 #endif
 
-GX_DECL_PUBLIC_STRUCT(GXFifoObj, 128);
+GX_PUBLIC_STRUCT_DECL(GXFifoObj, 128);
+
+void GXGetGPStatus(u8*, u8*, u8*, u8*, u8*);
 
 void GXSetCPUFifo(GXFifoObj*);
 BOOL GXGetCPUFifo(GXFifoObj*);

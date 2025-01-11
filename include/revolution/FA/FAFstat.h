@@ -5,7 +5,7 @@
 extern "C" {
 #endif
 
-typedef struct FAStat {
+struct FAStat {
     int filesize;
     s16 accessDate;
     s16 modifiedTime;
@@ -14,7 +14,7 @@ typedef struct FAStat {
     s16 createdDate;
     u16 unk;
     char flags;
-} FAStat;
+};
 
 int FAFstat(const char* filepath, FAStat* st);
 

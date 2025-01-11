@@ -1,13 +1,11 @@
 #ifndef RVL_SDK_OS_RESET_H
 #define RVL_SDK_OS_RESET_H
-#include <revolution/types.h>
+#include <types.h>
 #ifdef __cplusplus
 extern "C" {
 #endif
 
-typedef BOOL (*OSShutdownFunction)(u32 pass, u32 event);
-
-typedef enum { OS_SD_PASS_FIRST, OS_SD_PASS_SECOND } OSShutdownPass;
+typedef BOOL (*OSShutdownFunction)(BOOL final, u32 event);
 
 typedef enum {
     OS_SD_EVENT_SHUTDOWN = 2,

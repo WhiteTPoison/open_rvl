@@ -1,17 +1,10 @@
 #ifndef RVL_SDK_IPC_CLT_H
 #define RVL_SDK_IPC_CLT_H
 #include <revolution/OS.h>
-#include <revolution/types.h>
+#include <types.h>
 #ifdef __cplusplus
 extern "C" {
 #endif
-
-/**
- * Documentation from:
- * https://wiibrew.org/wiki/IOS
- * https://wiibrew.org/wiki/IOS/Resource_request
- * http://wiibrew.org/wiki/IPC_(SDK)
- */
 
 typedef enum {
     IPC_RESULT_FATAL_ERROR = -119,
