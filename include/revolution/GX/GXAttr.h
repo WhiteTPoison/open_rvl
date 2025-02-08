@@ -1,7 +1,7 @@
 #ifndef RVL_SDK_GX_ATTR_H
 #define RVL_SDK_GX_ATTR_H
 #include <revolution/GX/GXTypes.h>
-#include <revolution/types.h>
+#include <types.h>
 #ifdef __cplusplus
 extern "C" {
 #endif
@@ -36,7 +36,7 @@ void GXSetVtxAttrFmtv(GXVtxFmt fmt, const GXVtxAttrFmtList* list);
 void GXGetVtxAttrFmt(GXVtxFmt fmt, GXAttr attr, GXCompCnt* compCnt,
                      GXCompType* compType, u8* shift);
 void GXGetVtxAttrFmtv(GXVtxFmt fmt, GXVtxAttrFmtList* list);
-void GXSetArray(GXAttr attr, u32 base, u8 stride);
+void GXSetArray(GXAttr attr, const void* base, u8 stride);
 void GXInvalidateVtxCache(void);
 void GXSetTexCoordGen2(GXTexCoordID id, GXTexGenType type, GXTexGenSrc src,
                        u32 texMtxIdx, GXBool normalize, u32 dualTexMtxIdx);
@@ -46,11 +46,10 @@ void __GXSetVCD(void);
 void __GXCalculateVLim(void);
 void __GXSetVAT(void);
 
-//static void GXSetTexCoordGen(GXTexCoordID id, GXTexGenType type,
-//                             GXTexGenSrc src, u32 texMtxIdx) {
-//    // TODO: What matrix index is this???
-//    GXSetTexCoordGen2(id, type, src, texMtxIdx, FALSE, 125);
-//}
+inline void GXSetTexCoordGen(GXTexCoordID id, GXTexGenType type,
+                             GXTexGenSrc src, u32 texMtxIdx) {
+    GXSetTexCoordGen2(id, type, src, texMtxIdx, FALSE, GX_DUALMTX_IDENT);
+}
 
 #ifdef __cplusplus
 }

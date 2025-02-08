@@ -16,18 +16,19 @@ static void __GXXfVtxSpecs(void) {
 
     nrm = gxdt->binormal ? 2 : (gxdt->normal ? 1 : 0);
 
+    // clang-format off
+
     // Both fields in one access
     clr = 32 -
-          __cntlzw(GX_BITGET(gxdt->vcdLoReg, GX_CP_VCD_LO_COLORSPECULAR_ST,
-                             GX_CP_VCD_LO_COLORSPECULAR_SZ +
-                                 GX_CP_VCD_LO_COLORDIFFUSED_SZ)) +
-          1;
+          __cntlzw(GX_BITGET(gxdt->vcdLoReg, GX_CP_VCD_LO_COLORSPECULAR_B,
+                             GX_CP_VCD_LO_COLORSPECULAR_SZ + GX_CP_VCD_LO_COLORDIFFUSED_SZ)) + 1;
 
     // All 16 bits in VCD_Hi
     txc = 32 -
-          __cntlzw(GX_BITGET(gxdt->vcdHiReg, GX_CP_VCD_HI_TEX7COORD_ST,
-                             sizeof(u16) * 8)) +
-          1;
+          __cntlzw(GX_BITGET(gxdt->vcdHiReg, GX_CP_VCD_HI_TEX7COORD_B,
+                             GX_CP_VCD_HI_TEX7COORD_SZ * 8)) + 1;
+
+    // clang-format on
 
     // TODO: Fakematch? Bitset macros don't work here
     GX_XF_LOAD_REG_HDR(GX_XF_REG_INVERTEXSPEC);
@@ -51,8 +52,7 @@ void GXSetVtxDesc(GXAttr name, GXAttrType type) {
     gxdt->gxDirtyFlags |= GX_DIRTY_VCD;
 }
 
-// Explicit "inline" needed to force inline
-static inline void SETVCDATTR(GXAttr name, GXAttrType type) {
+static DECOMP_INLINE void SETVCDATTR(GXAttr name, GXAttrType type) {
     switch (name) {
     case GX_VA_PNMTXIDX:
         GX_CP_SET_VCD_LO_POSMATIDX(gxdt->vcdLoReg, type);
@@ -301,7 +301,7 @@ void GXGetVtxDescv(GXVtxDescList* list) {
     list[i].attr = GX_VA_NBT;
     GXGetVtxDesc(GX_VA_NBT, &list[i].type);
 
-    // TODO: Fake match
+    // TODO: Fakematch
     attr = 1;
     i = (*(new_var2 = &i)) + attr;
     list[i].attr = GX_VA_NULL;
@@ -332,9 +332,9 @@ void GXSetVtxAttrFmt(GXVtxFmt fmt, GXAttr attr, GXCompCnt compCnt,
     gxdt->vatDirtyFlags |= (u8)(1 << (u8)fmt);
 }
 
-// Explicit "inline" needed to force inline
-static inline void SETVAT(u32* vatA, u32* vatB, u32* vatC, GXAttr attr,
-                          GXCompCnt compCnt, GXCompType compType, u8 shift) {
+static DECOMP_INLINE void SETVAT(u32* vatA, u32* vatB, u32* vatC, GXAttr attr,
+                                 GXCompCnt compCnt, GXCompType compType,
+                                 u8 shift) {
     switch (attr) {
     case GX_VA_POS:
         GX_CP_SET_VAT_GROUP0_POS_CNT(*vatA, compCnt);
@@ -553,7 +553,7 @@ void GXGetVtxAttrFmtv(GXVtxFmt fmt, GXVtxAttrFmtList* list) {
     list->attr = GX_VA_NULL;
 }
 
-void GXSetArray(GXAttr attr, u32 base, u8 stride) {
+void GXSetArray(GXAttr attr, const void* base, u8 stride) {
     u32 idx;
 
     if (attr == GX_VA_NBT) {
@@ -569,7 +569,9 @@ void GXSetArray(GXAttr attr, u32 base, u8 stride) {
     GX_CP_LOAD_REG(GX_BP_REG_SETIMAGE2_TEX4 | idx, stride);
 }
 
-void GXInvalidateVtxCache(void) { WGPIPE.c = GX_FIFO_CMD_INVAL_VTX; }
+void GXInvalidateVtxCache(void) {
+    WGPIPE.c = GX_FIFO_CMD_INVAL_VTX;
+}
 
 void GXSetTexCoordGen2(GXTexCoordID id, GXTexGenType type, GXTexGenSrc src,
                        u32 texMtxIdx, GXBool normalize, u32 dualTexMtxIdx) {
@@ -680,7 +682,7 @@ void GXSetTexCoordGen2(GXTexCoordID id, GXTexGenType type, GXTexGenSrc src,
     gxdt->gxDirtyFlags |= GX_DIRTY_TEX0 << id;
 
     reg = 0;
-    GX_XF_SET_DUALTEX_BASEROW(reg, dualTexMtxIdx - GX_DTEXMTX0);
+    GX_XF_SET_DUALTEX_BASEROW(reg, dualTexMtxIdx - GX_DUALMTX0);
     GX_XF_SET_DUALTEX_NORMALIZE(reg, normalize);
     gxdt->dualTexRegs[id] = reg;
 

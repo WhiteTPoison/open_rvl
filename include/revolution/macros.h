@@ -7,21 +7,23 @@
 #define CLAMP(low, high, x)                                                    \
     ((x) > (high) ? (high) : ((x) < (low) ? (low) : (x)))
 
-#define ROUND_UP(x, align) (((x) + (align)-1) & (-(align)))
+#define ROUND_UP(x, align) (((x) + (align) - 1) & (-(align)))
 #define ROUND_UP_PTR(x, align)                                                 \
-    ((void*)((((u32)(x)) + (align)-1) & (~((align)-1))))
+    ((void*)((((u32)(x)) + (align) - 1) & (~((align) - 1))))
 
 #define ROUND_DOWN(x, align) ((x) & (-(align)))
-#define ROUND_DOWN_PTR(x, align) ((void*)(((u32)(x)) & (~((align)-1))))
+#define ROUND_DOWN_PTR(x, align) ((void*)(((u32)(x)) & (~((align) - 1))))
 
-#define ARRAY_LENGTH(x) (sizeof((x)) / sizeof((x)[0]))
+#define LENGTHOF(x) (sizeof((x)) / sizeof((x)[0]))
 
-#define CLEAR_PATH(x) __memclr((x), sizeof((x)))
+#define MEMCLR(x) __memclr((x), sizeof(*(x)))
 
 #define ALIGN(x) __attribute__((aligned(x)))
+
 #define DECL_SECTION(x) __declspec(section x)
 #define DECL_WEAK __declspec(weak)
-#define DONT_INLINE __attribute__((never_inline))
+
+#define DECLTYPE(x) __decltype__(x)
 
 // Codewarrior tricks for matching decomp
 // (Functions are given prototypes for -requireprotos)

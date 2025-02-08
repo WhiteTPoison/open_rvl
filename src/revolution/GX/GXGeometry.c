@@ -24,7 +24,7 @@ inline void __GXSetLightChan(volatile s32 dirtyFlags) {
     u32 addr = GX_XF_REG_COLOR0CNTRL;
 
     if (dirtyFlags & GX_DIRTY_NUM_COLORS) {
-        const u32 colors = GX_BP_GET_GENMODE_NUMCOLORS(gxdt->genMode);
+        u32 colors = GX_BP_GET_GENMODE_NUMCOLORS(gxdt->genMode);
         GX_XF_LOAD_REG(GX_XF_REG_NUMCOLORS, colors);
     }
 
@@ -45,7 +45,7 @@ inline void __GXSetTexGen(volatile s32 dirtyFlags) {
     u32 dtaddr;
 
     if (dirtyFlags & GX_DIRTY_NUM_TEX) {
-        const u32 gens = GX_BP_GET_GENMODE_NUMTEX(gxdt->genMode);
+        u32 gens = GX_BP_GET_GENMODE_NUMTEX(gxdt->genMode);
         GX_XF_LOAD_REG(GX_XF_REG_NUMTEX, gens);
     }
 
@@ -108,8 +108,8 @@ void __GXSetDirtyState(void) {
 
         tempFlags = dirtyFlags & GX_DIRTY_MTX_IDX;
         if (tempFlags != 0) {
-            __GXSetMatrixIndex(0);
-            __GXSetMatrixIndex(5);
+            __GXSetMatrixIndex(GX_VA_PNMTXIDX);
+            __GXSetMatrixIndex(GX_VA_TEX4MTXIDX);
         }
 
         tempFlags = dirtyFlags & GX_DIRTY_VIEWPORT;
@@ -170,14 +170,14 @@ void GXSetPointSize(u8 size, u32 offset) {
 }
 
 void GXEnableTexOffsets(GXTexCoordID id, GXBool lineOfs, GXBool pointOfs) {
-    GX_BP_SET_SU_SSIZE_USELINEOFS(gxdt->txcRegs[id], lineOfs);
-    GX_BP_SET_SU_SSIZE_USEPOINTOFS(gxdt->txcRegs[id], pointOfs);
+    GX_BP_SET_SU_SIZE_USELINEOFS(gxdt->txcRegs[id], lineOfs);
+    GX_BP_SET_SU_SIZE_USEPOINTOFS(gxdt->txcRegs[id], pointOfs);
     GX_BP_LOAD_REG(gxdt->txcRegs[id]);
     gxdt->lastWriteWasXF = FALSE;
 }
 
 void GXSetCullMode(GXCullMode mode) {
-    // Swap bits to get hardware representation (see nw4r::g3d::fifo::cm2hw)
+    // Swap bits to get hardware representation
     GXCullMode bits = (GXCullMode)(mode << 1 & 2 | mode >> 1 & 1);
     GX_BP_SET_GENMODE_CULLMODE(gxdt->genMode, bits);
     gxdt->gxDirtyFlags |= GX_DIRTY_GEN_MODE;

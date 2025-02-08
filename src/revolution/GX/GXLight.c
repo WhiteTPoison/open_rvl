@@ -1,5 +1,6 @@
-#include <math.h>
 #include <revolution/GX.h>
+
+#include <math.h>
 
 #define XF_MEM_LOBJ_SIZE 16
 
@@ -333,9 +334,9 @@ void GXSetNumChans(u8 num) {
 void GXSetChanCtrl(GXChannelID chan, GXBool enable, GXColorSrc ambSrc,
                    GXColorSrc matSrc, GXLightID lightMask, GXDiffuseFn diffFn,
                    GXAttnFn attnFn) {
-    const u32 regIdx = (u32)chan % 4;
-
+    u32 regIdx = (u32)chan % 4;
     u32 reg = 0;
+
     GX_XF_SET_COLOR0CNTRL_LIGHT(reg, enable);
     GX_XF_SET_COLOR0CNTRL_MATSRC(reg, matSrc);
     GX_XF_SET_COLOR0CNTRL_AMBSRC(reg, ambSrc);
@@ -343,8 +344,8 @@ void GXSetChanCtrl(GXChannelID chan, GXBool enable, GXColorSrc ambSrc,
                                                                 : diffFn);
     GX_XF_SET_COLOR0CNTRL_ATTNENABLE(reg, attnFn != GX_AF_NONE);
     GX_XF_SET_COLOR0CNTRL_ATTNSELECT(reg, attnFn != GX_AF_SPEC);
-    GX_XF_SET_COLOR0CNTRL_LMASKHI(reg, (u32)lightMask);
-    GX_XF_SET_COLOR0CNTRL_LMASKLO(reg, (u32)lightMask >> 4);
+    GX_XF_SET_COLOR0CNTRL_LMASKLO(reg, (u32)lightMask);
+    GX_XF_SET_COLOR0CNTRL_LMASKHI(reg, (u32)lightMask >> 4);
 
     gxdt->colorControl[regIdx] = reg;
     gxdt->gxDirtyFlags |= GX_DIRTY_CHAN_COLOR0 << (regIdx);

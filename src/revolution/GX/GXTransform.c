@@ -52,12 +52,12 @@ void __GXSetProjection(void) {
     // Temp required to match
     volatile void* wgpipe = &WGPIPE;
 
-    GX_XF_LOAD_REGS(ARRAY_LENGTH(gxdt->proj), GX_XF_REG_PROJECTIONA);
+    GX_XF_LOAD_REGS(LENGTHOF(gxdt->proj), GX_XF_REG_PROJECTIONA);
     WriteProjPS(wgpipe, gxdt->proj);
     WGPIPE.i = gxdt->projType;
 }
 
-void GXSetProjection(const Mtx44 proj, GXProjMtxType type) {
+void GXSetProjection(const Mtx44 proj, GXProjectionType type) {
     gxdt->projType = type;
 
     gxdt->proj[0] = proj[0][0];
@@ -180,9 +180,10 @@ void GXLoadTexMtxImm(const Mtx mtx, u32 id, GXMtxType type) {
     u32 addr;
     u32 num;
 
-    // Matrix address in XF memory
-    addr = id >= GX_DTEXMTX0 ? (id - GX_DTEXMTX0) * 4 + GX_XF_MEM_DUALTEXMTX
-                             : id * 4 + (u64)GX_XF_MEM_POSMTX;
+    // Base row address in XF memory
+    addr = id >= GX_DUALMTX0
+               ? (id - GX_DUALMTX0) * sizeof(f32) + GX_XF_MEM_DUALTEXMTX
+               : id * 4 + (u64)GX_XF_MEM_POSMTX;
 
     // Number of elements in matrix
     num = type == GX_MTX_2x4 ? (u64)(2 * 4) : 3 * 4;
@@ -222,10 +223,7 @@ void __GXSetViewport(void) {
 
 void GXSetViewportJitter(f32 ox, f32 oy, f32 sx, f32 sy, f32 near, f32 far,
                          u32 nextField) {
-    // "Field" as in VI field
-    // TODO: Is this an enum? I don't know anything about the return value other
-    // than that it is a u32 (NW4R signature)
-    if (nextField == 0) {
+    if (nextField == GX_FIELD_EVEN) {
         oy -= 0.5f;
     }
 
@@ -248,7 +246,9 @@ void GXSetViewport(f32 ox, f32 oy, f32 sx, f32 sy, f32 near, f32 far) {
     gxdt->gxDirtyFlags |= GX_DIRTY_VIEWPORT;
 }
 
-void GXGetViewportv(f32 view[6]) { Copy6Floats(view, gxdt->view); }
+void GXGetViewportv(f32 view[6]) {
+    Copy6Floats(view, gxdt->view);
+}
 
 void GXSetZScaleOffset(f32 scale, f32 offset) {
     gxdt->offsetZ = (f32)0xFFFFFF * offset;      // ???

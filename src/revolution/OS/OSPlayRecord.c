@@ -17,10 +17,6 @@ typedef enum {
     PLAY_RECORD_STATE_STOPPED    //!< __OSStopPlayRecord
 } OSPlayRecordState;
 
-/**
- * Documentation from:
- * https://wiibrew.org/wiki//title/00000001/00000002/data/play_rec.dat
- */
 typedef struct OSPlayRecord {
     u32 checksum;          // at 0x0
     wchar_t titleName[40]; // at 0x4
@@ -34,7 +30,7 @@ typedef struct OSPlayRecord {
 static OSPlayRecordState PlayRecordState = PLAY_RECORD_STATE_STOPPED;
 
 static s64 PlayRecordLastCloseTime;
-static NANDResult PlayRecordLastError;
+static s32 PlayRecordLastError;
 static BOOL PlayRecordRetry;
 static BOOL PlayRecordTerminated;
 static BOOL PlayRecordTerminate;
@@ -60,8 +56,7 @@ static u32 RecordCheckSum(const OSPlayRecord* playRec) {
     return checksum;
 }
 
-// Likely a result of __OSCreatePlayRecord
-CW_FORCE_BSS(OSPlayRecord_c, PlayRecord);
+DECOMP_FORCEACTIVE(OSPlayRecord_c, PlayRecord);
 
 static void PlayRecordAlarmCallback(OSAlarm* alarm, OSContext* ctx) {
 #pragma unused(alarm)
@@ -73,8 +68,7 @@ static void PlayRecordAlarmCallback(OSAlarm* alarm, OSContext* ctx) {
 static void PlayRecordCallback(s32 result, NANDCommandBlock* block) {
 #pragma unused(block)
 
-    NANDResult error = NAND_RESULT_OK;
-
+    s32 error = NAND_RESULT_OK;
     PlayRecordLastError = result;
 
     if (PlayRecordTerminate) {
@@ -226,11 +220,11 @@ static void PlayRecordCallback(s32 result, NANDCommandBlock* block) {
 
 void __OSStartPlayRecord(void) {
     if (NANDInit() == NAND_RESULT_OK) {
+        PlayRecordTerminate = FALSE;
         PlayRecordGet = FALSE;
         PlayRecordState = PLAY_RECORD_STATE_STARTED;
         PlayRecordError = FALSE;
         PlayRecordRetry = FALSE;
-        PlayRecordTerminate = FALSE;
         PlayRecordTerminated = FALSE;
         PlayRecordLastError = NAND_RESULT_OK;
         PlayRecordCallback(NAND_RESULT_OK, NULL);

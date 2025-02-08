@@ -4,13 +4,8 @@
 #define MEM_EXP_HEAP_MBLOCK_FREE 'FR'
 #define MEM_EXP_HEAP_MBLOCK_USED 'UD'
 
-// Base heap must be >= 16 bytes in size
-#define MEM_EXP_HEAP_MIN_SIZE 20
 // Size of base and expandable heap head
 #define MEM_EXP_HEAP_HEAD_SIZE (sizeof(MEMiHeapHead) + sizeof(MEMiExpHeapHead))
-// Minimum buffer size for an expandable heap
-#define MEM_EXP_HEAP_MIN_BUFFER_SIZE                                           \
-    (MEM_EXP_HEAP_HEAD_SIZE + MEM_EXP_HEAP_MIN_SIZE)
 
 static MEMiExpHeapHead*
 GetExpHeapHeadPtrFromHeapHead_(const MEMiHeapHead* heap) {
@@ -26,7 +21,9 @@ static void SetAllocMode_(MEMiExpHeapHead* exp, u16 mode) {
     exp->allocMode = mode;
 }
 
-static u16 GetAllocMode_(const MEMiExpHeapHead* exp) { return exp->allocMode; }
+static u16 GetAllocMode_(const MEMiExpHeapHead* exp) {
+    return exp->allocMode;
+}
 
 static MEMiExpHeapMBlock* GetMBlockHeadPtr_(void* memBlock) {
     return SubU32ToPtr(memBlock, sizeof(MEMiExpHeapMBlock));
@@ -120,20 +117,13 @@ static MEMiHeapHead* InitExpHeap_(MEMiHeapHead* heap, void* end, u16 opt) {
     return heap;
 }
 
-#ifndef NON_MATCHING
-#error AllocUsedBlockFromFreeBlock_ has not yet been matched.
-#endif
+// Non-matching
 static void* AllocUsedBlockFromFreeBlock_(MEMiExpHeapHead* exp,
                                           MEMiExpHeapMBlock* mblock,
                                           void* memPtr, u32 size,
                                           u16 allocDir) {
-    ;
-    ;
 }
 
-#ifndef NON_MATCHING
-#error AllocFromHead_ has not yet been matched (https://decomp.me/scratch/5mrPW).
-#endif
 static void* AllocFromHead_(MEMiHeapHead* heap, u32 size, s32 align) {
     MEMiExpHeapMBlock* it;
     MEMiExpHeapHead* exp;
@@ -169,9 +159,7 @@ static void* AllocFromHead_(MEMiHeapHead* heap, u32 size, s32 align) {
                            : NULL;
 }
 
-#ifndef NON_MATCHING
-#error AllocFromTail_ has not yet been matched (https://decomp.me/scratch/obMhf).
-#endif
+// Non-matching
 static void* AllocFromTail_(MEMiHeapHead* heap, u32 size, s32 align) {
     MEMiExpHeapMBlock* it;
     MEMiExpHeapHead* exp;
@@ -207,12 +195,8 @@ static void* AllocFromTail_(MEMiHeapHead* heap, u32 size, s32 align) {
                            : NULL;
 }
 
-#ifndef NON_MATCHING
-#error RecycleRegion_ has not yet been matched.
-#endif
+// Non-matching
 static void RecycleRegion_(MEMiExpHeapHead* exp, void** region) {
-    ;
-    ;
 }
 
 MEMiHeapHead* MEMCreateExpHeapEx(void* start, u32 size, u16 opt) {
@@ -224,7 +208,7 @@ MEMiHeapHead* MEMCreateExpHeapEx(void* start, u32 size, u16 opt) {
 
     // Ensure valid heap
     if (GetUIntPtr(start) > GetUIntPtr(end) ||
-        GetOffsetFromPtr(start, end) < MEM_EXP_HEAP_MIN_BUFFER_SIZE) {
+        GetOffsetFromPtr(start, end) < MEM_EXP_HEAP_MIN_SIZE) {
         return NULL;
     }
 
@@ -258,12 +242,8 @@ void* MEMAllocFromExpHeapEx(MEMiHeapHead* heap, u32 size, s32 align) {
     return memBlock;
 }
 
-#ifndef NON_MATCHING
-#error MEMResizeForMBlockExpHeap has not yet been matched.
-#endif
+// Non-matching
 u32 MEMResizeForMBlockExpHeap(MEMiHeapHead* heap, void* memBlock, u32 size) {
-    ;
-    ;
 }
 
 void MEMFreeToExpHeap(MEMiHeapHead* heap, void* memBlock) {

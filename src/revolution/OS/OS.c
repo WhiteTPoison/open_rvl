@@ -12,7 +12,7 @@
 
 OSExecParams __OSRebootParams;
 static DVDDriveInfo DriveInfo ALIGN(32);
-static DVDDriveBlock DriveBlock;
+static DVDCommandBlock DriveBlock;
 
 s64 __OSStartTime;
 static OSBootInfo* BootInfo;
@@ -46,7 +46,7 @@ void __DBVECTOR(void);
 void __OSEVSetNumber(void);
 void __OSEVEnd(void);
 
-CW_FORCE_BSS(OS_c, __OSRebootParams);
+DECOMP_FORCEACTIVE(OS_c, __OSRebootParams);
 
 asm void __OSFPRInit(void) {
     // clang-format off
@@ -136,15 +136,17 @@ paired_singles_disabled:
     // clang-format on
 }
 
-static void DisableWriteGatherPipe(void) { PPCMthid2(PPCMfhid2() & ~HID2_WPE); }
+static void DisableWriteGatherPipe(void) {
+    PPCMthid2(PPCMfhid2() & ~HID2_WPE);
+}
 
 u32 __OSGetHollywoodRev(void) {
     return *(u32*)OSPhysicalToCached(OS_PHYS_HOLLYWOOD_REV);
 }
 
 void __OSGetIOSRev(OSIOSRev* rev) {
-    const u32 version = *(u32*)OSPhysicalToUncached(OS_PHYS_IOS_VERSION);
-    const u32 builddate = *(u32*)OSPhysicalToUncached(OS_PHYS_IOS_BUILD_DATE);
+    u32 version = *(u32*)OSPhysicalToUncached(OS_PHYS_IOS_VERSION);
+    u32 builddate = *(u32*)OSPhysicalToUncached(OS_PHYS_IOS_BUILD_DATE);
 
     rev->idHi = version >> 24 & 0xFF;
     rev->idLo = version >> 16 & 0xFF;
@@ -167,8 +169,8 @@ u32 OSGetConsoleType(void) {
 
     hollywood = __OSGetHollywoodRev();
 
-    if (OS_DVD_DEVICE_CODE_ADDR & 0x8000) {
-        switch (OS_DVD_DEVICE_CODE_ADDR & ~0x8000) {
+    if (OS_DVD_DEVICE_CODE & DVD_DEVICE_CODE_READ) {
+        switch (OS_DVD_DEVICE_CODE & ~DVD_DEVICE_CODE_READ) {
         case 0x0002:
         case 0x0003:
         case 0x0203:
@@ -256,14 +258,14 @@ static void MemClear(void* mem, u32 size) {
     DCFlushRange(flush, 0x40000);
 }
 
-static void ClearArena(void) DONT_INLINE {
+static void ClearArena(void) DECOMP_DONT_INLINE {
     // System reset
     if (!((OSGetResetCode() >> 31) & 1)) {
         MemClear(OSGetArenaLo(), (u32)OSGetArenaHi() - (u32)OSGetArenaLo());
     }
     // Region doesn't exist, or begins somewhere outside of MEM1
     else if (__OSRebootParams.regionStart == NULL ||
-             !OS_MEM_IS_MEM1(__OSRebootParams.regionStart)) {
+             !OSIsMEM1Region(__OSRebootParams.regionStart)) {
         MemClear(OSGetArenaLo(), (u32)OSGetArenaHi() - (u32)OSGetArenaLo());
     }
     // Region begins after arena begins
@@ -288,7 +290,7 @@ static void ClearArena(void) DONT_INLINE {
     }
 }
 
-static void ClearMEM2Arena(void) DONT_INLINE {
+static void ClearMEM2Arena(void) DECOMP_DONT_INLINE {
     // System reset
     if (!((OSGetResetCode() >> 31) & 1)) {
         MemClear(OSGetMEM2ArenaLo(),
@@ -296,7 +298,7 @@ static void ClearMEM2Arena(void) DONT_INLINE {
     }
     // Region doesn't exist, or begins somewhere outside of MEM2
     else if (__OSRebootParams.regionStart == NULL ||
-             !OS_MEM_IS_MEM2(__OSRebootParams.regionStart)) {
+             !OSIsMEM2Region(__OSRebootParams.regionStart)) {
         MemClear(OSGetMEM2ArenaLo(),
                  (u32)OSGetMEM2ArenaHi() - (u32)OSGetMEM2ArenaLo());
     }
@@ -323,14 +325,15 @@ static void ClearMEM2Arena(void) DONT_INLINE {
     }
 }
 
-static void InquiryCallback(s32 arg0, DVDDriveBlock* block) {
-#pragma unused(arg0)
-    switch (block->WORD_0xC) {
-    case 0:
-        OS_DVD_DEVICE_CODE_ADDR = DriveInfo.deviceCode | 0x8000;
+static void InquiryCallback(s32 result, DVDCommandBlock* block) {
+#pragma unused(result)
+
+    switch (block->state) {
+    case DVD_STATE_IDLE:
+        OS_DVD_DEVICE_CODE = MAKE_DVD_DEVICE_CODE(DriveInfo.deviceCode);
         break;
     default:
-        OS_DVD_DEVICE_CODE_ADDR = 0x0001;
+        OS_DVD_DEVICE_CODE = 0x0001;
         break;
     }
 }
@@ -340,8 +343,10 @@ static void CheckTargets(void) {
     case 0x81:
         OSReport("OS ERROR: boot program is not for RVL target. Please use "
                  "correct boot program.\n");
+        // clang-format off
 #line 1112
         OSError("Failed to run app");
+        // clang-format on
         break;
     case 0x80:
     default:
@@ -352,8 +357,10 @@ static void CheckTargets(void) {
     case 0x81:
         OSReport("OS ERROR: apploader[D].img is not for RVL target. Please use "
                  "correct apploader[D].img.\n");
+        // clang-format off
 #line 1130
         OSError("Failed to run app");
+        // clang-format on
         break;
     case 0x80:
     default:
@@ -392,9 +399,6 @@ static void ReportOSInfo(void) {
         break;
     case OS_CONSOLE_MASK_EMU:
         switch (type) {
-        case OS_CONSOLE_NDEV_1_0:
-            OSReport("NDEV 1.0\n");
-            break;
         case OS_CONSOLE_NDEV_2_1:
             OSReport("NDEV 2.1\n");
             break;
@@ -406,6 +410,9 @@ static void ReportOSInfo(void) {
             break;
         case OS_CONSOLE_NDEV_1_1:
             OSReport("NDEV 1.1\n");
+            break;
+        case OS_CONSOLE_NDEV_1_0:
+            OSReport("NDEV 1.0\n");
             break;
         case OS_CONSOLE_RVL_EMU:
             OSReport("Revolution Emulator\n");
@@ -487,7 +494,7 @@ void OSInit(void) {
         mem1lo = *(void**)OSPhysicalToCached(OS_PHYS_USABLE_MEM1_START);
         if (mem1lo == NULL) {
             // Use the linker-generated arena if it is in MEM1...
-            if (OS_MEM_IS_MEM1(__ArenaLo)) {
+            if (OSIsMEM1Region(__ArenaLo)) {
                 // ...and if the OS boot info does not specify one
                 mem1lo =
                     BootInfo->arenaLo == NULL ? __ArenaLo : BootInfo->arenaLo;
@@ -529,7 +536,7 @@ void OSInit(void) {
         mem2lo = *(void**)OSPhysicalToCached(OS_PHYS_USABLE_MEM2_START);
         if (mem2lo != NULL) {
             // Use the linker-generated arena if it is in MEM2
-            if (OS_MEM_IS_MEM2(__ArenaLo)) {
+            if (OSIsMEM2Region(__ArenaLo)) {
                 mem2lo = __ArenaLo;
 
                 // Use debugger stack if it would be wasted
@@ -589,7 +596,7 @@ void OSInit(void) {
             __OSInitSTM();
 
             SCInit();
-            while (SCCheckStatus() == SC_STATUS_1) {
+            while (SCCheckStatus() == SC_STATUS_BUSY) {
                 ;
             }
 
@@ -601,8 +608,8 @@ void OSInit(void) {
             DVDInit();
 
             if (__OSIsGcam) {
-                OS_DVD_DEVICE_CODE_ADDR = 0x9000;
-            } else if (OS_DVD_DEVICE_CODE_ADDR == 0) {
+                OS_DVD_DEVICE_CODE = MAKE_DVD_DEVICE_CODE(0x1000);
+            } else if (OS_DVD_DEVICE_CODE == 0) {
                 DCInvalidateRange(&DriveInfo, sizeof(DVDDriveInfo));
                 DVDInquiryAsync(&DriveBlock, &DriveInfo, InquiryCallback);
             }
@@ -732,7 +739,7 @@ static asm void __OSDBJump(void){
 
 OSExceptionHandler
     __OSSetExceptionHandler(u8 type, OSExceptionHandler handler) {
-    const OSExceptionHandler old = OSExceptionTable[type];
+    OSExceptionHandler old = OSExceptionTable[type];
     OSExceptionTable[type] = handler;
     return old;
 }
@@ -858,9 +865,13 @@ void __OSPSInit(void) {
     // clang-format on
 }
 
-u32 __OSGetDIConfig(void) { return OS_DI_CONFIG & 0xFF; }
+u32 __OSGetDIConfig(void) {
+    return OS_DI_CONFIG & 0xFF;
+}
 
-void OSRegisterVersion(const char* ver) { OSReport("%s\n", ver); }
+void OSRegisterVersion(const char* ver) {
+    OSReport("%s\n", ver);
+}
 
 // Must be defined down here because of data pooling
 static const char* AppGameNameForSysMenu = "HAEA";
