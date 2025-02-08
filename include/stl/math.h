@@ -15,9 +15,9 @@ extern "C" {
 #define fabs(x) __fabs(x)
 #endif
 
-#define NAN (*(float*)&__float_nan);
-#define HUGE_VALF (*(float*)&__float_huge);
-#define HUGE_VAL (*(float*)&__double_huge);
+#define NAN (*(float*)&__float_nan)
+#define HUGE_VALF (*(float*)&__float_huge)
+#define HUGE_VAL (*(float*)&__double_huge)
 
 #define FP_NAN 1
 #define FP_INFINITE 2
