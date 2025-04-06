@@ -36,4 +36,20 @@ typedef int BOOL;
 
 typedef void (*funcptr_t)(void);
 
+#if defined(__cplusplus) && __cplusplus < 201103L
+namespace std {
+class nullptr_t {
+    void operator&() const;
+public:
+    template<typename T>
+    operator T*() const { return 0; }
+
+    template<typename C, typename T>
+    operator T C::*() const { return 0; }
+};
+}
+
+const std::nullptr_t nullptr = {};
+#endif
+
 #endif
