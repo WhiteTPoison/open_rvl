@@ -8,7 +8,8 @@
 extern "C" {
 #endif
 
-void DWC_Init(int, const char*, u32 gamecode, DWCAlloc alloc, DWCFree free);
+s32 DWC_Init(int, const char*, u32 gamecode, DWCAlloc alloc, DWCFree free);
+void DWC_Shutdown(void);
 
 #ifdef __cplusplus
 }
