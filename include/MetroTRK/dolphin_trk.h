@@ -9,6 +9,7 @@ void InitMetroTRK(void);
 void InitMetroTRK_BBA(void);
 
 void EnableMetroTRKInterrupts(void);
+void TRK_flush_cache(void*, size_t);
 
 #ifdef __cplusplus
 }

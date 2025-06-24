@@ -7,8 +7,17 @@ extern "C" {
 #endif
 
 // TODO: 0x37b91e
+
+//typedef struct PF_VOLUME {
+//    u8 dummy[0x1898];
+//} PF_VOLUME;
 typedef struct PF_VOLUME {
-    u8 dummy[0x1898];
+    char _0x0[0x1640];
+    u32 _0x1640;
+    u32 _0x1644;
+    char _0x1648[0x948];
+    u32 _0x1f90;
+    char _0x1f94[0x34];
 } PF_VOLUME;
 
 typedef struct PF_CUR_VOLUME {

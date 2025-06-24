@@ -1,7 +1,7 @@
 #ifndef RVL_SDK_OS_MESSAGE_H
 #define RVL_SDK_OS_MESSAGE_H
 #include <revolution/OS/OSThread.h>
-#include <revolution/types.h>
+#include <types.h>
 #ifdef __cplusplus
 extern "C" {
 #endif
@@ -9,7 +9,7 @@ extern "C" {
 // General-purpose typedef
 typedef void* OSMessage;
 
-typedef enum { OS_MSG_PERSISTENT = (1 << 0) } OSMessageFlags;
+typedef enum { OS_MSG_BLOCKING = (1 << 0) } OSMessageFlags;
 
 typedef struct OSMessageQueue {
     OSThreadQueue sendQueue; // at 0x0

@@ -31,7 +31,7 @@ void RFLiInitLoader(void) {
  * RFL_Res.dat documentation from:
  * https://wiki.tockdom.com/wiki/RFL_Res.dat_(File_Format)
  */
-static void parseOnmemoryRes_(void) DONT_INLINE {
+static void parseOnmemoryRes_(void) DECOMP_DONT_INLINE {
     RFLiLoader* loader;
     int i;
 

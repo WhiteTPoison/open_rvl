@@ -1,12 +1,12 @@
 #include <MetroTRK.h>
 #include <revolution/DB.h>
+#include <revolution/DVD.h>
 #include <revolution/OS.h>
 #include <string.h>
 
-static u8 Debug_BBA;
-
-DECL_SECTION(".init") DECL_WEAK void __start(void);
 int main(int argc, char** argv);
+
+static u8 Debug_BBA;
 
 DECL_SECTION(".init") static void __init_registers(void);
 DECL_SECTION(".init") static void __init_data(void);
@@ -17,11 +17,16 @@ DECL_SECTION(".init") static void __check_pad3(void) {
     }
 }
 
-DECL_SECTION(".init") static void __set_debug_bba(void) { Debug_BBA = TRUE; }
+DECL_SECTION(".init") static void __set_debug_bba(void) {
+    Debug_BBA = TRUE;
+}
 
-DECL_SECTION(".init") static BOOL __get_debug_bba(void) { return Debug_BBA; }
+DECL_SECTION(".init") static BOOL __get_debug_bba(void) {
+    return Debug_BBA;
+}
 
-asm void __start(void) {
+void __start(void);
+DECL_SECTION(".init") DECL_WEAK asm void __start(void) {
     // clang-format off
     nofralloc
 
@@ -227,13 +232,9 @@ _no_args:
      * Here, the OS and its debug monitor are initialized, and
      * then we check if we should call __check_pad3.
      *
-     * __check_pad3 is called before future initialization if:
-     * 1. Bit 0 in the DVD device code address is NOT set ((code & 0x8000) == 0x0000)
-     * 2. The DVD device code address ends in 001 ((code & 0x7FFF) == 0x0001)
-     *
-     * OSGetConsole type also uses the DVD device code address, but none
-     * of its results seem to match anything that would meet these
-     * requirements.
+     * __check_pad3 is called before future initialization if the disk
+     * drive device code is 0x0001, or if the OS' inquiry fails (emulation
+     * or some debug hardware?)
      *
      * The apploader reads the button state of the fourth GCN controller
      * and writes it to GC_PAD_3_BTN (zero-indexed), which is used in
@@ -246,16 +247,16 @@ _init_os:
     bl OSInit
 
     // Load DVD device code address
-    lis r4, OS_DVD_DEVICE_CODE_ADDR@ha
-    addi r4, r4, OS_DVD_DEVICE_CODE_ADDR@l
+    lis r4, OS_DVD_DEVICE_CODE@ha
+    addi r4, r4, OS_DVD_DEVICE_CODE@l
     lhz r3, 0(r4)
-    // Checking bit 0 in the device code address
-    andi. r5, r3, 0x8000
-    beq _call_check_pad3 // <- Bit 0 is NOT set
-    // Checking for X001 device code address
-    andi. r3, r3, 0x7FFF // ~0x8000
-    cmplwi r3, 1
-    bne _check_debug_bba // <- NOT X001 device code address
+    // Check whether OS inquiry failed
+    andi. r5, r3, DVD_DEVICE_CODE_READ
+    beq _call_check_pad3 // <- Bit 0 is NOT set (fail)
+    // 0x0001 may be a real ID or a failsafe (see OS.c:InquiryCallback)
+    andi. r3, r3, (~DVD_DEVICE_CODE_READ) & 0xFFFF
+    cmplwi r3, 0x0001
+    bne _check_debug_bba // <- NOT 0x0001 device code address
 _call_check_pad3:
     bl __check_pad3
 
@@ -279,7 +280,7 @@ _after_init_metro_trk_bba:
     mr r3, r14
     mr r4, r15
     bl main
-    b __fini_cpp // <- Will halt CPU
+    b exit // <- Will halt CPU
     // clang-format on
 }
 
@@ -357,7 +358,7 @@ DECL_SECTION(".init") static void __init_data(void) {
             break;
         }
 
-        __copy_rom_section(rs->virtualOfs, rs->romOfs, rs->size);
+        __copy_rom_section(rs->virt, rs->phys, rs->size);
         rs++;
     }
 
@@ -367,7 +368,7 @@ DECL_SECTION(".init") static void __init_data(void) {
             break;
         }
 
-        __init_bss_section(bs->virtualOfs, bs->size);
+        __init_bss_section(bs->virt, bs->size);
         bs++;
     }
 }

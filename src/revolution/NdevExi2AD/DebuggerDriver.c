@@ -10,21 +10,21 @@ static OSInterruptHandler __DBMtrCallback;
 static u8 __DBReadUSB_CSR(void);
 static void __DBWaitForSendMail(void);
 
-void __DBMtrHandler(u32 type, OSContext* ctx) {
+void __DBMtrHandler(s16 type, OSContext* ctx) {
     __DBEXIInputFlag = TRUE;
 
     if (__DBMtrCallback != NULL)
         __DBMtrCallback(0, ctx);
 }
 
-void __DBIntrHandler(u32 type, OSContext* ctx) {
+void __DBIntrHandler(s16 type, OSContext* ctx) {
     PI_HW_REGS[PI_INTSR] = PI_INTSR_DEBUG;
     if (__DBDbgCallback != NULL)
         __DBDbgCallback(type, ctx);
 }
 
 static void __DBCheckMailBox(void) {
-    const u8 csr = __DBReadUSB_CSR();
+    u8 csr = __DBReadUSB_CSR();
     if (!(csr & 0x8)) {
         u32 mail;
         __DBReadMailbox(&mail);
@@ -43,7 +43,7 @@ static u8 __DBReadUSB_CSR(void) {
 }
 
 void DBInitComm(u8** flagOut, OSInterruptHandler handler) {
-    const BOOL enabled = OSDisableInterrupts();
+    BOOL enabled = OSDisableInterrupts();
 
     *flagOut = &__DBEXIInputFlag;
     __DBMtrCallback = handler;
@@ -52,9 +52,7 @@ void DBInitComm(u8** flagOut, OSInterruptHandler handler) {
     OSRestoreInterrupts(enabled);
 }
 
-#ifndef NON_MATCHING
-#error DBInitInterrupts has not yet been matched. (// https://decomp.me/scratch/YjmTr)
-#endif
+// Non-matching
 void DBInitInterrupts(void) {
     __OSMaskInterrupts(OS_INTR_MASK(OS_INTR_EXI_2_EXI) |
                        OS_INTR_MASK(OS_INTR_EXI_2_TC));
@@ -68,7 +66,7 @@ u32 DBQueryData(void) {
     __DBEXIInputFlag = FALSE;
 
     if (__DBRecvDataSize == 0) {
-        const BOOL enabled = OSDisableInterrupts();
+        BOOL enabled = OSDisableInterrupts();
         __DBCheckMailBox();
         OSRestoreInterrupts(enabled);
     }
@@ -77,7 +75,7 @@ u32 DBQueryData(void) {
 }
 
 BOOL DBRead(void* dst, u32 size) {
-    const BOOL enabled = OSDisableInterrupts();
+    BOOL enabled = OSDisableInterrupts();
 
     __DBRead(ODEMUGetPc2NngcOffset(__DBRecvMail) + 0x1000, dst,
              ROUND_UP(size, 4));
@@ -91,7 +89,8 @@ BOOL DBRead(void* dst, u32 size) {
 
 BOOL DBWrite(const void* src, u32 size) {
     static u8 l_byOffsetCounter = 128;
-    const BOOL enabled = OSDisableInterrupts();
+
+    BOOL enabled = OSDisableInterrupts();
 
     u32 ofs, mail;
 

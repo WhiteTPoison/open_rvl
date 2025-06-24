@@ -1,7 +1,7 @@
 #ifndef RVL_SDK_VI_H
 #define RVL_SDK_VI_H
 #include <revolution/GX.h>
-#include <revolution/types.h>
+#include <types.h>
 #ifdef __cplusplus
 extern "C" {
 #endif
@@ -26,10 +26,9 @@ typedef enum {
 } VITvFormat;
 
 typedef enum VIScanMode {
-    VI_SCAN_MODE_NON_INT,
     VI_SCAN_MODE_INT,
-    VI_SCAN_MODE_PROG,
-    VI_SCAN_MODE_3,
+    VI_SCAN_MODE_DS,
+    VI_SCAN_MODE_PROG
 } VIScanMode;
 
 typedef enum VIXfbMode {
@@ -49,7 +48,9 @@ void VIWaitForRetrace(void);
 void VIConfigure(const GXRenderModeObj* rmo);
 void VIConfigurePan(u16 x, u16 y, u16 w, u16 h);
 void VIFlush(void);
+
 void VISetNextFrameBuffer(void* fb);
+void* VIGetCurrentFrameBuffer(void);
 
 void VISetBlack(BOOL black);
 s32 VIGetRetraceCount(void);

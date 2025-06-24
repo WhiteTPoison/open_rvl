@@ -18,12 +18,12 @@ typedef struct __va_list_struct {
     char* reg_save_area;
 } va_list[1];
 
-void* __va_arg(va_list, int);
+void* __va_arg(va_list argp, int type);
 
 #define va_start(VA_LIST, ARG) ((void)ARG, __builtin_va_info(&VA_LIST))
 #define va_end(VA_LIST) ((void)VA_LIST)
 #define va_arg(VA_LIST, ARG_TYPE)                                              \
-    (*(ARG_TYPE*)) __va_arg(VA_LIST, _var_arg_typeof(ARG_TYPE))
+    (*(ARG_TYPE*)__va_arg(VA_LIST, _var_arg_typeof(ARG_TYPE)))
 
 #ifdef __cplusplus
 }

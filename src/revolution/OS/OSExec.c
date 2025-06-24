@@ -6,13 +6,16 @@
 #define MENU_TITLE_ID 0x0000000100000002
 #define TICKET_VIEW_SIZE 0xD8
 
+// Force CW to align the file boundary to 64
+u8 FORCE_BSS_ALIGN[0xABCD] ALIGN(64);
+
 static u8 views[0xBD00] ALIGN(32);
 
 BOOL __OSInReboot;
 
 static s32 _ES_InitLib(s32* fd);
 static s32 _ES_GetTicketViews(s32* fd, u64 tid, void* pViews, u32* count);
-static s32 _ES_LaunchTitle(s32* fd, u64 tid, void* pViews) DONT_INLINE;
+static s32 _ES_LaunchTitle(s32* fd, u64 tid, void* pViews) DECOMP_DONT_INLINE;
 
 void __OSGetExecParams(OSExecParams* out) {
     if (OS_DOL_EXEC_PARAMS >= (void*)0x80000000) {

@@ -1,11 +1,13 @@
 #ifndef MSL_CPP_CWCHAR_H
 #define MSL_CPP_CWCHAR_H
 #include <wchar.h>
+#ifdef __cplusplus
 
 namespace std {
 using ::mbstowcs;
 using ::mbtowc;
 using ::swprintf;
+using ::vswprintf;
 using ::wcscat;
 using ::wcschr;
 using ::wcscmp;
@@ -15,4 +17,5 @@ using ::wcsncpy;
 using ::wcstombs;
 } // namespace std
 
+#endif
 #endif

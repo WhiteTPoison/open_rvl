@@ -267,7 +267,7 @@ do_load:
 }
 
 void LCEnable(void) {
-    const BOOL enabled = OSDisableInterrupts();
+    BOOL enabled = OSDisableInterrupts();
     __LCEnable();
     OSRestoreInterrupts(enabled);
 }
@@ -293,15 +293,15 @@ do_invalidate:
 }
 
 asm void LCLoadBlocks(register void* dst, register const void* src,
-                      register u32 len) {
+                      register u32 blocks) {
     // clang-format off
     nofralloc
 
-    rlwinm r6, len, 30, 27, 31
+    rlwinm r6, blocks, 30, 27, 31
     clrlwi src, src, 3
     or r6, r6, src
     mtspr DMA_U, r6
-    rlwinm r6, len, 2, 28, 29
+    rlwinm r6, blocks, 2, 28, 29
     or r6, r6, dst
     ori r6, r6, 0x12
     mtspr DMA_L, r6
@@ -311,15 +311,15 @@ asm void LCLoadBlocks(register void* dst, register const void* src,
 }
 
 asm void LCStoreBlocks(register void* dst, register const void* src,
-                       register u32 len){
+                       register u32 blocks){
     // clang-format off
     nofralloc
 
-    rlwinm r6, len, 30, 27, 31
+    rlwinm r6, blocks, 30, 27, 31
     clrlwi dst, dst, 3
     or r6, r6, dst
     mtspr DMA_U, r6
-    rlwinm r6, len, 2, 28, 29
+    rlwinm r6, blocks, 2, 28, 29
     or r6, r6, src
     ori r6, r6, 0x2
     mtspr DMA_L, r6
@@ -330,7 +330,7 @@ asm void LCStoreBlocks(register void* dst, register const void* src,
 
 u32 LCStoreData(void* dst, const void* src, u32 len) {
     u32 blocks = (len + 31) / 32;
-    const u32 ret = (blocks + 127) / 128;
+    u32 ret = (blocks + 127) / 128;
 
     while (blocks > 0) {
         if (blocks < 128) {
@@ -386,7 +386,7 @@ static void L2Init(void) {
 }
 
 void L2Enable(void) {
-    const u32 l2cr = PPCMfl2cr();
+    u32 l2cr = PPCMfl2cr();
     PPCMtl2cr((l2cr | L2CR_L2E) & ~L2CR_L2I);
 }
 
@@ -419,7 +419,7 @@ void L2GlobalInvalidate(void) {
 }
 
 void DMAErrorHandler(u8 error, OSContext* ctx, u32 dsisr, u32 dar, ...) {
-    const u32 hid2 = PPCMfhid2();
+    u32 hid2 = PPCMfhid2();
 
     OSReport("Machine check received\n");
     OSReport("HID2 = 0x%x   SRR1 = 0x%x\n", hid2, ctx->srr1);
