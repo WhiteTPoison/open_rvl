@@ -33,9 +33,9 @@ static inline void OSSetGQR6(register u32 type, register u32 scale) {
     register u32 val = ((scale << 8 | type) << 16) | ((scale << 8) | type);
 
     // clang-format off
-    asm {
-        mtspr 0x396, val
-    }
+    asm (
+        "mtspr 0x396, val\n\t"
+    );
     // clang-format on
 }
 
@@ -43,9 +43,9 @@ static inline void OSSetGQR7(register u32 type, register u32 scale) {
     register u32 val = ((scale << 8 | type) << 16) | ((scale << 8) | type);
 
     // clang-format off
-    asm {
-        mtspr 0x397, val
-    }
+    asm(
+        "mtspr 0x397, val\n\t"
+    );
     // clang-format on
 }
 
@@ -58,9 +58,9 @@ static inline f32 __OSu8tof32(register u8* in) {
     register f32 ret;
 
     // clang-format off
-    asm {
-        psq_l ret, 0(in), 1, 2
-    }
+    asm(
+        "psq_l ret, 0(in), 1, 2\n\t"
+    );
     // clang-format on
 
     return ret;
@@ -100,9 +100,9 @@ static inline f32 __OSs16tof32(register s16* arg) {
     register f32 ret;
 
     // clang-format off
-    asm {
-        psq_l ret, 0(arg), 1, 5
-    }
+    asm(
+        "psq_l ret, 0(arg), 1, 5\n\t"
+    );
     // clang-format on
 
     return ret;
@@ -123,9 +123,7 @@ static inline u8 __OSf32tou8(register f32 arg) {
     u8 r;
 
     // clang-format off
-    asm {
-        psq_st arg, 0(ptr), 1, 2
-    }
+    asm ("psq_st arg, 0(ptr), 1, 2\n\t");
     // clang-format on
 
     r = *(u8*)ptr;

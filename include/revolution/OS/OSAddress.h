@@ -1,3 +1,4 @@
+#pragma once
 #ifndef RVL_SDK_OS_ADDRESS_H
 #define RVL_SDK_OS_ADDRESS_H
 #include <types.h>

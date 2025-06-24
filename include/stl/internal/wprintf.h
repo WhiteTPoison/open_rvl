@@ -5,8 +5,8 @@
 extern "C" {
 #endif
 
-int vswprintf(wchar_t*, size_t, const wchar_t*, va_list);
-int swprintf(wchar_t*, size_t, const wchar_t*, ...);
+int vswprintf(s16*, size_t, const s16*, va_list);
+int swprintf(s16*, size_t, const s16*, ...);
 
 #ifdef __cplusplus
 }

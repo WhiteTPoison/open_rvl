@@ -238,8 +238,8 @@ typedef struct RFLiCharInfo {
     } body; // at 0x16
 
     struct {
-        wchar_t name[RFL_NAME_LEN + 1];
-        wchar_t creator[RFL_CREATOR_LEN + 1];
+        s16 name[RFL_NAME_LEN + 1];
+        s16 creator[RFL_CREATOR_LEN + 1];
         u16 sex : 1;
         u16 bmonth : 4;
         u16 bday : 5;

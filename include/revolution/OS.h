@@ -1,15 +1,13 @@
 /**
  * References: YAGCD, WiiBrew, Dolphin Emulator
  */
-
+#pragma once
 #ifndef RVL_SDK_PUBLIC_OS_H
 #define RVL_SDK_PUBLIC_OS_H
 #ifdef __cplusplus
 extern "C" {
 #endif
 
-#include <revolution/OS/OS.h>
-#include <revolution/OS/OSAddress.h>
 #include <revolution/OS/OSAlarm.h>
 #include <revolution/OS/OSAlloc.h>
 #include <revolution/OS/OSArena.h>
@@ -21,7 +19,6 @@ extern "C" {
 #include <revolution/OS/OSFastCast.h>
 #include <revolution/OS/OSFatal.h>
 #include <revolution/OS/OSFont.h>
-#include <revolution/OS/OSHardware.h>
 #include <revolution/OS/OSInterrupt.h>
 #include <revolution/OS/OSIpc.h>
 #include <revolution/OS/OSLink.h>

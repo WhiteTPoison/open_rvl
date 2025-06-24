@@ -1,3 +1,4 @@
+#pragma once
 #ifndef RVL_SDK_OS_THREAD_H
 #define RVL_SDK_OS_THREAD_H
 #include <revolution/OS/OSContext.h>

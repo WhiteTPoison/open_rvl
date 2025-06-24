@@ -1,3 +1,4 @@
+#pragma once
 #ifndef MSL_STDDEF_H
 #define MSL_STDDEF_H
 #ifdef __cplusplus
@@ -17,7 +18,7 @@ typedef intptr_t ptrdiff_t;
 typedef unsigned long size_t;
 
 #ifndef __cplusplus
-typedef unsigned short wchar_t;
+typedef unsigned short s16;
 #endif
 
 #ifdef __cplusplus

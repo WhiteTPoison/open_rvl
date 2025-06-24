@@ -1,3 +1,4 @@
+#pragma once
 #ifndef MSL_PRINTF_H
 #define MSL_PRINTF_H
 #include <stdarg.h>

@@ -1,3 +1,4 @@
+#pragma once
 #ifndef RVL_SDK_MEM_EXP_HEAP_H
 #define RVL_SDK_MEM_EXP_HEAP_H
 #include <types.h>

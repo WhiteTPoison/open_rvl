@@ -1,3 +1,4 @@
+#pragma once
 /**
  * Codewarrior tricks for matching decomp
  * (Macros generate prototypes to satisfy -requireprotos)

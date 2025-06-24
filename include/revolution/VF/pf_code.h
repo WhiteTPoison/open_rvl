@@ -17,9 +17,9 @@ typedef enum {
 typedef s32 (*PF_OEM_2_UNICODE)(char* src, u16* dst);
 typedef s32 (*PF_UNICODE_2_OEM)(u16* src, char* dst);
 typedef s32 (*PF_OEM_CHAR_WIDTH)(char* ch);
-typedef s32 (*PF_UNICODE_CHAR_WIDH)(wchar_t* ch);
+typedef s32 (*PF_UNICODE_CHAR_WIDH)(s16* ch);
 typedef u32 (*PF_IS_OEM_MB_CHAR)(char ch, u32 target);
-typedef u32 (*PF_IS_UNICODE_MB_CHAR)(wchar_t ch, u32 target);
+typedef u32 (*PF_IS_UNICODE_MB_CHAR)(s16 ch, u32 target);
 
 typedef struct {
     PF_OEM_2_UNICODE oem2unicode;             // at 0x0

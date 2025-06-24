@@ -1,7 +1,7 @@
 #include "internal/wstring.h"
 
-int wcscmp(const wchar_t* s1, const wchar_t* s2) {
-    wchar_t c1, c2;
+int wcscmp(const s16* s1, const s16* s2) {
+    s16 c1, c2;
 
     do
     {

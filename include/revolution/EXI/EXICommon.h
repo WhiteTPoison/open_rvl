@@ -1,3 +1,4 @@
+#pragma once
 #ifndef RVL_SDK_EXI_COMMON_H
 #define RVL_SDK_EXI_COMMON_H
 #include <types.h>

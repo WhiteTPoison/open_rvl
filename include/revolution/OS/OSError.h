@@ -1,3 +1,4 @@
+#pragma once
 #ifndef RVL_SDK_OS_ERROR_H
 #define RVL_SDK_OS_ERROR_H
 #include <types.h>

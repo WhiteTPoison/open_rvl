@@ -78,7 +78,7 @@ NWC24Err NWC24SetMsgToId(NWC24MsgObj* msg, u64 id);
 NWC24Err NWC24SetMsgText(NWC24MsgObj* msg, const char* text, u32 len,
                          NWC24Charset charset, NWC24Encoding encoding);
 NWC24Err NWC24SetMsgFaceData(NWC24MsgObj* msg, const RFLCharData* data);
-NWC24Err NWC24SetMsgAltName(NWC24MsgObj* msg, const wchar_t* name, u32 len);
+NWC24Err NWC24SetMsgAltName(NWC24MsgObj* msg, const s16* name, u32 len);
 NWC24Err NWC24SetMsgMBNoReply(NWC24MsgObj* msg, BOOL enable);
 NWC24Err NWC24SetMsgMBRegDate(NWC24MsgObj* msg, u16 year, u8 month, u8 day);
 

@@ -131,8 +131,8 @@ typedef struct NANDBanner {
     u32 flags;                                          // at 0x4
     u16 iconSpeed;                                      // at 0x8
     u8 reserved[0x20 - 0xA];                            // at 0xA
-    wchar_t title[NAND_BANNER_TITLE_MAX];               // at 0x20
-    wchar_t subtitle[NAND_BANNER_TITLE_MAX];            // at 0x60
+    s16 title[NAND_BANNER_TITLE_MAX];               // at 0x20
+    s16 subtitle[NAND_BANNER_TITLE_MAX];            // at 0x60
     u8 bannerTexture[0x6000];                           // at 0xA0
     u8 iconTexture[0x1200][NAND_BANNER_ICON_MAX_FRAME]; // at 0x60A0
 } NANDBanner;

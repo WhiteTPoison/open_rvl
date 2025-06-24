@@ -1,7 +1,7 @@
 #include <revolution/VF.h>
 
-size_t VFipf_w_strlen(const wchar_t* str) {
-    const wchar_t* it = str;
+size_t VFipf_w_strlen(const s16* str) {
+    const s16* it = str;
     ptrdiff_t diff;
 
     // Find end of string
@@ -14,9 +14,9 @@ size_t VFipf_w_strlen(const wchar_t* str) {
     return diff >> 1;
 }
 
-wchar_t* VFipf_w_strcpy(wchar_t* dst, const wchar_t* src) {
+s16* VFipf_w_strcpy(s16* dst, const s16* src) {
     // Preserve original pointer
-    wchar_t* work_dst = dst;
+    s16* work_dst = dst;
 
     for (; *work_dst = *src, *work_dst != L'\0'; src++, work_dst++) {
         ;
@@ -25,7 +25,7 @@ wchar_t* VFipf_w_strcpy(wchar_t* dst, const wchar_t* src) {
     return dst;
 }
 
-int VFipf_w_strncmp(const wchar_t* s1, const wchar_t* s2, size_t n) {
+int VFipf_w_strncmp(const s16* s1, const s16* s2, size_t n) {
 
     for (; n > 0; n--, s1++, s2++) {
         if (*s1 == '\0' || *s2 == '\0' || *s1 != *s2) {

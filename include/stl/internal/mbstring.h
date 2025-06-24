@@ -5,9 +5,9 @@
 extern "C" {
 #endif
 
-int mbtowc(wchar_t*, const char*, size_t);
-size_t mbstowcs(wchar_t*, const char*, size_t);
-size_t wcstombs(char*, const wchar_t*, size_t);
+int mbtowc(s16*, const char*, size_t);
+size_t mbstowcs(s16*, const char*, size_t);
+size_t wcstombs(char*, const s16*, size_t);
 
 #ifdef __cplusplus
 }

@@ -171,7 +171,7 @@ NWC24Err NWC24SetMsgFaceData(NWC24MsgObj* msg, const RFLCharData* data) {
     return NWC24_OK;
 }
 
-NWC24Err NWC24SetMsgAltName(NWC24MsgObj* msg, const wchar_t* name, u32 len) {
+NWC24Err NWC24SetMsgAltName(NWC24MsgObj* msg, const s16* name, u32 len) {
     if (!(msg->flags & MSG_OBJ_INITIALIZED) ||
         (msg->flags & MSG_OBJ_DELIVERING)) {
         return NWC24_ERR_PROTECTED;
@@ -189,7 +189,7 @@ NWC24Err NWC24SetMsgAltName(NWC24MsgObj* msg, const wchar_t* name, u32 len) {
         return NWC24_ERR_NULL;
     }
 
-    NWC24Data_SetDataP(&msg->alt, name, len * sizeof(wchar_t));
+    NWC24Data_SetDataP(&msg->alt, name, len * sizeof(s16));
     return NWC24_OK;
 }
 

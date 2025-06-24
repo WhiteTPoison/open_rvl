@@ -1,15 +1,15 @@
 #include <revolution/BASE.h>
 #include <revolution/OS.h>
 
-asm u32 PPCMfmsr(void) {
+u32 PPCMfmsr(void) {
     // clang-format off
     nofralloc
-    mfmsr r3
+    mtmsr r3
     blr
     // clang-format on
 }
 
-asm void PPCMtmsr(register u32 val) {
+void PPCMtmsr(register u32 val) {
     // clang-format off
     nofralloc
     mtmsr val
@@ -17,7 +17,7 @@ asm void PPCMtmsr(register u32 val) {
     // clang-format on
 }
 
-asm u32 PPCMfhid0(void) {
+u32 PPCMfhid0(void) {
     // clang-format off
     nofralloc
     mfhid0 r3
@@ -25,7 +25,7 @@ asm u32 PPCMfhid0(void) {
     // clang-format on
 }
 
-asm void PPCMthid0(register u32 val) {
+void PPCMthid0(register u32 val) {
     // clang-format off
     nofralloc
     mthid0 val
@@ -33,7 +33,7 @@ asm void PPCMthid0(register u32 val) {
     // clang-format on
 }
 
-asm u32 PPCMfl2cr(void) {
+u32 PPCMfl2cr(void) {
     // clang-format off
     nofralloc
     mfl2cr r3
@@ -41,7 +41,7 @@ asm u32 PPCMfl2cr(void) {
     // clang-format on
 }
 
-asm void PPCMtl2cr(register u32 val) {
+void PPCMtl2cr(register u32 val) {
     // clang-format off
     nofralloc
     mtl2cr val
@@ -49,7 +49,7 @@ asm void PPCMtl2cr(register u32 val) {
     // clang-format on
 }
 
-asm void PPCMtdec(register u32 val) {
+void PPCMtdec(register u32 val) {
     // clang-format off
     nofralloc
     mtdec val
@@ -57,7 +57,7 @@ asm void PPCMtdec(register u32 val) {
     // clang-format on
 }
 
-asm void PPCSync(void) {
+void PPCSync(void) {
     // clang-format off
     nofralloc
     sc
@@ -65,7 +65,7 @@ asm void PPCSync(void) {
     // clang-format on
 }
 
-asm void PPCHalt(void) {
+void PPCHalt(void) {
     // clang-format off
     nofralloc
     sync
@@ -78,7 +78,7 @@ loop:
     // clang-format on
 }
 
-asm void PPCMtmmcr0(register u32 val) {
+void PPCMtmmcr0(register u32 val) {
     // clang-format off
     nofralloc
     mtmmcr0 val
@@ -86,7 +86,7 @@ asm void PPCMtmmcr0(register u32 val) {
     // clang-format on
 }
 
-asm void PPCMtmmcr1(register u32 val) {
+void PPCMtmmcr1(register u32 val) {
     // clang-format off
     nofralloc
     mtmmcr1 val
@@ -94,7 +94,7 @@ asm void PPCMtmmcr1(register u32 val) {
     // clang-format on
 }
 
-asm void PPCMtpmc1(register u32 val) {
+void PPCMtpmc1(register u32 val) {
     // clang-format off
     nofralloc
     mtpmc1 val
@@ -102,7 +102,7 @@ asm void PPCMtpmc1(register u32 val) {
     // clang-format on
 }
 
-asm void PPCMtpmc2(register u32 val) {
+void PPCMtpmc2(register u32 val) {
     // clang-format off
     nofralloc
     mtpmc2 val
@@ -110,7 +110,7 @@ asm void PPCMtpmc2(register u32 val) {
     // clang-format on
 }
 
-asm void PPCMtpmc3(register u32 val) {
+void PPCMtpmc3(register u32 val) {
     // clang-format off
     nofralloc
     mtpmc3 val
@@ -118,7 +118,7 @@ asm void PPCMtpmc3(register u32 val) {
     // clang-format on
 }
 
-asm void PPCMtpmc4(register u32 val){
+void PPCMtpmc4(register u32 val){
     // clang-format off
     nofralloc
     mtpmc4 val
@@ -155,7 +155,7 @@ void PPCMtfpscr(register u32 val) {
     // clang-format on
 }
 
-asm u32 PPCMfhid2(void) {
+u32 PPCMfhid2(void) {
     // clang-format off
     nofralloc
     mfspr r3, 0x398
@@ -163,7 +163,7 @@ asm u32 PPCMfhid2(void) {
     // clang-format on
 }
 
-asm void PPCMthid2(register u32 val) {
+void PPCMthid2(register u32 val) {
     // clang-format off
     nofralloc
     mtspr 0x398, val
@@ -171,7 +171,7 @@ asm void PPCMthid2(register u32 val) {
     // clang-format on
 }
 
-asm u32 PPCMfwpar(void) {
+u32 PPCMfwpar(void) {
     // clang-format off
     nofralloc
     sync
@@ -180,7 +180,7 @@ asm u32 PPCMfwpar(void) {
     // clang-format on
 }
 
-asm void PPCMtwpar(register u32 val) {
+void PPCMtwpar(register u32 val) {
     // clang-format off
     nofralloc
     mtwpar r3
@@ -192,7 +192,7 @@ void PPCDisableSpeculation(void) {
     PPCMthid0(PPCMfhid0() | HID0_SPD);
 }
 
-asm void PPCSetFpNonIEEEMode(void) {
+void PPCSetFpNonIEEEMode(void) {
     // clang-format off
     nofralloc
     mtfsb1 29

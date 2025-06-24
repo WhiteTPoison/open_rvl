@@ -1,3 +1,4 @@
+#pragma once
 #ifndef RVL_SDK_PUBLIC_MEM_H
 #define RVL_SDK_PUBLIC_MEM_H
 #ifdef __cplusplus

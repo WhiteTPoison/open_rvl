@@ -4,7 +4,7 @@
  * https://www.gc-forever.com/yagcd/chap13.html#sec13
  * https://wiibrew.org/wiki/Memory_map
  */
-
+#pragma once
 #ifndef RVL_SDK_OS_HARDWARE_H
 #define RVL_SDK_OS_HARDWARE_H
 #include <types.h>
@@ -169,7 +169,7 @@ OS_DEF_GLOBAL_ARR(u8, SC_PRDINFO, [0x100],               0x80003800);
 /**
  * PI hardware globals
  */
-volatile u32 PI_HW_REGS[]
+volatile u32* PI_HW_REGS;
 #ifdef __MWERKS__
 : 0xCC003000
 #endif
@@ -227,7 +227,7 @@ typedef enum {
 /**
  * MI hardware registers
  */
-volatile u16 MI_HW_REGS[]
+volatile u16* MI_HW_REGS;
 #ifdef __MWERKS__
 : 0xCC004000
 #endif

@@ -37,7 +37,7 @@ void VFiPFSTR_MoveStrPos(PF_STR* str, s16 n) {
             }
         }
     } else {
-        wchar_t* data = (wchar_t*)str->head;
+        s16* data = (s16*)str->head;
 
         for (i = 0; i < n; i++) {
             const size_t width = VFipf_vol_set.codeset.unicode_char_width(data);
@@ -59,7 +59,7 @@ s32 VFiPFSTR_InitStr(PF_STR* str, const char* s, u32 mode) {
         str->tail = s + VFipf_strlen(s);
     } else if (mode == PFSTR_CODEMODE_UNICODE) {
         str->head = s;
-        str->tail = s + VFipf_w_strlen((wchar_t*)s) * sizeof(wchar_t);
+        str->tail = s + VFipf_w_strlen((s16*)s) * sizeof(s16);
     } else {
         return PF_RESULT_INVALID;
     }
@@ -94,7 +94,7 @@ u16 VFiPFSTR_StrNumChar(PF_STR* str, u32 target) {
     } else {
         length = 0;
         for (; data[0] != '\0' || data[1] != '\0'; data += width, length++) {
-            width = VFipf_vol_set.codeset.unicode_char_width((wchar_t*)data);
+            width = VFipf_vol_set.codeset.unicode_char_width((s16*)data);
         }
     }
 
@@ -102,14 +102,14 @@ u16 VFiPFSTR_StrNumChar(PF_STR* str, u32 target) {
 }
 
 s32 VFiPFSTR_StrCmp(const PF_STR* str, const char* cmp) {
-    const wchar_t* data;
-    wchar_t out;
+    const s16* data;
+    s16 out;
 
     if (VFiPFSTR_GetCodeMode((PF_STR*)str) == PFSTR_CODEMODE_OEM) {
         return VFipf_strcmp(str->head, cmp);
     }
 
-    data = (const wchar_t*)str->head;
+    data = (const s16*)str->head;
     do {
         VFipf_vol_set.codeset.oem2unicode((char*)cmp, &out);
         cmp++;
@@ -120,9 +120,9 @@ s32 VFiPFSTR_StrCmp(const PF_STR* str, const char* cmp) {
 
 int VFiPFSTR_StrNCmp(PF_STR* str, const char* cmp, u32 target, s16 offset,
                      u16 n) {
-    const wchar_t* wdata;
+    const s16* wdata;
     const char* data;
-    wchar_t out;
+    s16 out;
 
     if (VFiPFSTR_GetCodeMode(str) == PFSTR_CODEMODE_OEM ||
         target == PFSTR_CODEMODE_LOCAL) {
@@ -139,9 +139,9 @@ int VFiPFSTR_StrNCmp(PF_STR* str, const char* cmp, u32 target, s16 offset,
     }
 
     if (target == PFSTR_CODEMODE_OEM) {
-        wdata = (wchar_t*)(str->head + offset * sizeof(wchar_t));
+        wdata = (s16*)(str->head + offset * sizeof(s16));
     } else {
-        wdata = (wchar_t*)(str->tail + offset * sizeof(wchar_t));
+        wdata = (s16*)(str->tail + offset * sizeof(s16));
     }
 
     do {
@@ -155,7 +155,7 @@ int VFiPFSTR_StrNCmp(PF_STR* str, const char* cmp, u32 target, s16 offset,
 
 void VFiPFSTR_ToUpperNStr(PF_STR* str, u16 n, char* out) {
     const char* data;
-    const wchar_t* wdata;
+    const s16* wdata;
     u32 ch;
     BOOL letter;
 
@@ -165,7 +165,7 @@ void VFiPFSTR_ToUpperNStr(PF_STR* str, u16 n, char* out) {
             *out++ = VFipf_toupper(*data);
         }
     } else {
-        for (wdata = (const wchar_t*)str->head; n > 0 && *wdata != L'\0';
+        for (wdata = (const s16*)str->head; n > 0 && *wdata != L'\0';
              n--, wdata++) {
             letter = *wdata >= 'a' && *wdata <= 'z';
 
@@ -177,7 +177,7 @@ void VFiPFSTR_ToUpperNStr(PF_STR* str, u16 n, char* out) {
 
             out[0] = ch >> 0 & 0xFF;
             out[1] = ch >> 8 & 0xFF;
-            out += sizeof(wchar_t);
+            out += sizeof(s16);
         }
 
         *out = '\0';

@@ -1,3 +1,4 @@
+#pragma once
 #ifndef RVL_SDK_OS_INTERRUPT_H
 #define RVL_SDK_OS_INTERRUPT_H
 #include <types.h>

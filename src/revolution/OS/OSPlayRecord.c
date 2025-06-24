@@ -19,7 +19,7 @@ typedef enum {
 
 typedef struct OSPlayRecord {
     u32 checksum;          // at 0x0
-    wchar_t titleName[40]; // at 0x4
+    s16 titleName[40]; // at 0x4
     char UNK_0x54[0x4];
     s64 startTime;   // at 0x58
     s64 stopTime;    // at 0x60

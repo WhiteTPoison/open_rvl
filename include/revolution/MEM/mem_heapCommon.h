@@ -1,3 +1,4 @@
+#pragma once
 #ifndef RVL_SDK_MEM_HEAP_COMMON_H
 #define RVL_SDK_MEM_HEAP_COMMON_H
 #include <revolution/MEM/mem_list.h>

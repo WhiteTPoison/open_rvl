@@ -436,8 +436,8 @@ const char* nandGetHomeDir(void) {
     return s_homeDir;
 }
 
-void NANDInitBanner(NANDBanner* banner, u32 flags, const wchar_t* title,
-                    const wchar_t* subtitle) {
+void NANDInitBanner(NANDBanner* banner, u32 flags, const s16* title,
+                    const s16* subtitle) {
     memset(banner, 0, sizeof(NANDBanner));
     banner->flags = flags;
     banner->magic = NAND_BANNER_MAGIC;

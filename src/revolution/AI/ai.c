@@ -143,30 +143,30 @@ void __AIDHandler(s16 intr, OSContext* ctx) {
     OSSetCurrentContext(ctx);
 }
 
-static asm void __AICallbackStackSwitch(register AIDMACallback callback) {
+static void __AICallbackStackSwitch(register AIDMACallback callback) {
     // clang-format off
+    asm(
+    "mr r31, callback\n\t"
 
-    mr r31, callback
+    "lis r5, __OldStack@ha\n\t"
+    "addi r5, r5, __OldStack@l\n\t"
+    "stw r1, 0(r5)\n\t"
 
-    lis r5, __OldStack@ha
-    addi r5, r5, __OldStack@l
-    stw r1, 0(r5)
-
-    lis r5, __CallbackStack@ha
-    addi r5, r5, __CallbackStack@l
-    lwz r1, 0(r5)
+    "lis r5, __CallbackStack@ha\n\t"
+    "addi r5, r5, __CallbackStack@l\n\t"
+    "lwz r1, 0(r5)\n\t"
         
-    subi r1, r1, 0x8
-    mtlr r31
-    blrl
+    "subi r1, r1, 0x8\n\t"
+    "mtlr r31\n\t"
+    "blrl\n\t"
     
-    lis r5, __OldStack@ha
-    addi r5, r5, __OldStack@l
-    lwz r1, 0(r5)
+    "lis r5, __OldStack@ha\n\t"
+    "addi r5, r5, __OldStack@l\n\t"
+    "lwz r1, 0(r5)\n\t"
 
-    frfree
-    blr
-
+    "frfree\n\t"
+    "blr\n\t"
+    )
     // clang-format on
 }
 
