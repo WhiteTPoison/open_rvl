@@ -11,9 +11,7 @@
 extern "C" {
 #endif
 
-#ifdef __MWERKS__
 #define fabs(x) __fabs(x)
-#endif
 
 #define NAN (*(float*)&__float_nan)
 #define HUGE_VALF (*(float*)&__float_huge)

@@ -9,9 +9,7 @@ extern "C" {
  * DSP hardware registers
  */
 volatile u16 DSP_HW_REGS[]
-#ifdef __MWERKS__
 : 0xCC005000
-#endif
 ;
 
 /**

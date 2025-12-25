@@ -6,9 +6,7 @@ extern "C" {
 #endif
 
 u32 IPC_HW_REGS[]
-#ifdef __MWERKS__
 : 0xCD000000
-#endif
 ;
 
 inline u32 ACRReadReg(u32 reg) {
