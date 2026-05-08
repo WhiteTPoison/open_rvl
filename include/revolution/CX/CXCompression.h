@@ -5,6 +5,7 @@ extern "C" {
 #endif
 
 static void CXUncompressLZ(void* data, void* destination);
+static void CXUncompressLZ()
 
 
 #ifdef __cplusplus

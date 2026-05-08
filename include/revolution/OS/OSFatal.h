@@ -6,7 +6,7 @@
 extern "C" {
 #endif
 
-void OSFatal(GXColor textColor, GXColor bgColor, const char* msg);
+void OSFatal(union GXColor textColor, union GXColor bgColor, const char* msg);
 
 #ifdef __cplusplus
 }
